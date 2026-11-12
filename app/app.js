@@ -217,19 +217,31 @@ function skillPlan(b) {
     let acc = 0;
     for (const [code, lv, why] of list) {
       const s = SK[code], a = acc + 2, z = acc + lv + 1; acc += lv;
-      {
-      // extrai pré-requisitos do campo ds
-      let reqLine = '';
+      let reqItems = [];
       if (s && s.ds) {
-        const m = s.ds.match(/Pr[eé]-requisitos?:([^\n]+)/i);
-        if (m) reqLine = m[1].trim();
+        const m = s.ds.match(/Pr[e\u00e9]-requisitos?:([^\n]+)/i);
+        if (m) m[1].split(',').forEach(part => {
+          const p = part.trim().replace(/\.$/,'');
+          if (!p) return;
+          const lm = p.match(/^(.+?)\s+(\d+)$/);
+          reqItems.push(lm ? { nome: lm[1].trim(), nivel: lm[2] } : { nome: p, nivel: null });
+        });
       }
-      const tipHtml = s ? `<div class="sk-tip">
-        <div class="th">${img(P.skill(code), 'style="width:36px;height:36px"')}<div><b>${esc(s.n)}</b><small>Nível máximo: ${s.max} · ${s.st === 'ok' ? 'Funciona em combate' : s.st === 'fora' ? 'Sem efeito em combate' : 'Ainda não funciona'}</small></div></div>${reqLine ? `<div class="req">Pré-requisitos: ${esc(reqLine)}</div>` : ''}<div class="desc">${esc((s.ds||'').replace(/Pr[eé]-requisitos?:[^\n]+\n?/i,'').trim().slice(0,400))}</div>
-      </div>` : '';
-      h += `<div class="sk"><span class="sk-wrap">${img(P.skill(code))}${tipHtml}</span><span><a onclick="showSkill('${code}')">${esc(s ? s.n : code)}</a> <b class="mut">nv ${lv}</b></span><span class="lvl">${a === z ? a : a + '–' + z}</span><span class="sel">${s ? badge(s.st) : ''}</span><span class="why">${esc(why)}</span></div>`;
-    };
+      const tipId = 'st-' + code;
+      const reqHtml = reqItems.length
+        ? '<ul class="sreq">' + reqItems.map(r => {
+            const found = Object.values(SK).find(x => x.n === r.nome);
+            const ico = found ? img(P.skill(found.code)) : '<span class="ph"></span>';
+            return `<li>${ico}<span>${esc(r.nome)}</span>${r.nivel ? `<b>nv\u00a0${r.nivel}</b>` : ''}</li>`;
+          }).join('') + '</ul>'
+        : '<p class="snone">Sem pr\u00e9-requisitos para esta skill</p>';
+      const selo = s ? (s.st === 'ok' ? '\u2705 Funciona em combate' : s.st === 'fora' ? '\u26d4 Sem efeito em combate' : '\u23f3 Ainda n\u00e3o funciona') : '';
+      const tipHtml = s
+        ? `<div class="sk-tip" id="${tipId}" onmouseenter="tipOver('${tipId}')" onmouseleave="tipOut('${tipId}')"><div class="sth">${img(P.skill(code))}<div><b>${esc(s.n)}</b><small>Nv m\u00e1x: ${s.max} \u00b7 ${esc(selo)}</small></div></div><div class="sreq-lbl">Precisa ter antes:</div>${reqHtml}</div>`
+        : '';
+      h += `<div class="sk"><span class="sk-wrap" onmouseenter="skOver('${tipId}')" onmouseleave="skOut('${tipId}')">${img(P.skill(code))}${tipHtml}</span><span><a onclick="showSkill('${code}')">${esc(s ? s.n : code)}</a> <b class="mut">nv ${lv}</b></span><span class="lvl">${a === z ? a : a + '\u2013' + z}</span><span class="sel">${s ? badge(s.st) : ''}</span><span class="why">${esc(why)}</span></div>`;
     }
+
     h += '</div>';
   });
   return h;
@@ -389,6 +401,16 @@ function viewBuild() {
   $('#view').innerHTML = h;
   if (b.extra === 'potter') potUpd();
 }
+// ---------- SKILL TOOLTIP HOVER ----------
+let _tipTimer = null;
+window.skOver = id => {
+  clearTimeout(_tipTimer);
+  document.querySelectorAll('.sk-tip.vis').forEach(el => { if (el.id !== id) el.classList.remove('vis'); });
+  const el = document.getElementById(id); if (el) el.classList.add('vis');
+};
+window.skOut = id => { _tipTimer = setTimeout(() => { const el = document.getElementById(id); if (el) el.classList.remove('vis'); }, 180); };
+window.tipOver = id => { clearTimeout(_tipTimer); };
+window.tipOut  = id => { _tipTimer = setTimeout(() => { const el = document.getElementById(id); if (el) el.classList.remove('vis'); }, 180); };
 window.derived = (id, i) => {
   const b = BUILDS.find(x => x.id === id), f = b.fases[i], L = CALC.faseNivel(f.nv), d = CALC.derivados(f.stats, L), el = $('#der-' + i);
   if (el.innerHTML) { el.innerHTML = ''; return; }
