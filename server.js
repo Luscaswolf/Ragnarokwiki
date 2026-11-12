@@ -17,61 +17,67 @@ const MIME = {
   '.json': 'application/json',
 };
 
-// Script injetado no HTML: conecta ao SSE e recarrega quando servidor avisar
 const RELOAD_SCRIPT = `
 <script>
 (function(){
   const es = new EventSource('/__reload');
-  es.onmessage = () => location.reload();
-  es.onerror   = () => setTimeout(() => location.reload(), 1000);
+  es.addEventListener('reload', e => {
+    const file = e.data || '';
+    if (file.endsWith('.css')) {
+      document.querySelectorAll('link[rel=stylesheet]').forEach(l => {
+        const u = new URL(l.href); u.searchParams.set('_r', Date.now()); l.href = u.toString();
+      });
+      return;
+    }
+    document.body.style.transition = 'opacity .12s';
+    document.body.style.opacity = '0';
+    setTimeout(() => location.reload(), 130);
+  });
+  // onerror silencioso — sem reload automatico na reconexao
+  es.onerror = () => {};
 })();
 </script>`;
 
-// Clientes SSE conectados
 const clients = new Set();
 
-function sendReload() {
-  for (const res of clients) {
-    try { res.write('data: reload\n\n'); } catch (_) {}
+function sendReload(filename) {
+  const msg = 'event: reload\ndata: ' + (filename || '') + '\n\n';
+  for (const res of [...clients]) {
+    try { res.write(msg); } catch (_) { clients.delete(res); }
   }
 }
 
-// Watch recursivo nos arquivos do projeto
-const WATCH_DIRS = [ROOT];
-const DEBOUNCE = 120;
-let debounceTimer = null;
+// Debounce GLOBAL unico — qualquer mudanca espera 400ms antes de disparar
+// Evita multiplos reloads por save atomico (write temp + rename)
+let globalTimer = null;
+let pendingFile = '';
 
-function watchDir(dir) {
-  try {
-    fs.watch(dir, { recursive: true }, (event, filename) => {
-      if (!filename) return;
-      // ignora: .git, node_modules, e os próprios arquivos de imagem (muito ruído)
-      if (/[\\/](\.git|node_modules)[\\/]/.test(filename)) return;
-      if (/\.(png|webp|gif|jpg|ico)$/.test(filename)) return;
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        console.log('  ~ alterado:', filename);
-        sendReload();
-      }, DEBOUNCE);
-    });
-  } catch (e) {
-    console.warn('watch falhou em', dir, e.message);
-  }
-}
+try {
+  fs.watch(ROOT, { recursive: true }, (event, filename) => {
+    if (!filename) return;
+    if (/[\/\\](\.git|node_modules)[\/\\]/.test(filename)) return;
+    if (/\.(png|webp|gif|jpg|ico)$/.test(filename)) return;
+    if (filename === 'server.js') return;
+    // guarda o ultimo arquivo alterado
+    pendingFile = filename.replace(/\\/g, '/');
+    clearTimeout(globalTimer);
+    globalTimer = setTimeout(() => {
+      console.log('  ~', pendingFile);
+      sendReload(pendingFile);
+      pendingFile = '';
+    }, 400);
+  });
+} catch (e) { console.warn('watch error:', e.message); }
 
-for (const d of WATCH_DIRS) watchDir(d);
-
-// Servidor HTTP
 http.createServer((req, res) => {
-  // SSE endpoint de reload
   if (req.url === '/__reload') {
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
     });
-    res.write('data: connected\n\n');
+    // ping inicial sem evento reload — so confirma conexao
+    res.write(': connected\n\n');
     clients.add(res);
     req.on('close', () => clients.delete(res));
     return;
@@ -79,27 +85,23 @@ http.createServer((req, res) => {
 
   let urlPath = req.url.split('?')[0];
   if (urlPath === '/') urlPath = '/index.html';
-
   const filePath = path.join(ROOT, urlPath);
 
   fs.readFile(filePath, (err, data) => {
     if (err) { res.writeHead(404); res.end('Not found'); return; }
-
     const ext = path.extname(filePath).toLowerCase();
     const ct = MIME[ext] || 'application/octet-stream';
-
-    // Injeta script de reload só no HTML
     if (ext === '.html') {
       const html = data.toString('utf8').replace('</body>', RELOAD_SCRIPT + '</body>');
       res.writeHead(200, { 'Content-Type': ct, 'Cache-Control': 'no-cache' });
       res.end(html);
     } else {
-      res.writeHead(200, { 'Content-Type': ct });
+      res.writeHead(200, { 'Content-Type': ct, 'Cache-Control': 'no-cache' });
       res.end(data);
     }
   });
 
 }).listen(PORT, () => {
   console.log('Servidor rodando em http://localhost:' + PORT);
-  console.log('Hot-reload ativo — salve qualquer .html, .js ou .css para recarregar.');
+  console.log('Hot-reload ativo (debounce 400ms, sem piscar).');
 });

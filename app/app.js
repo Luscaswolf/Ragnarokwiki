@@ -120,7 +120,7 @@ function viewHome() {
   let h = `<div class="hero2"><div style="min-width:0"><h1>Codex de Builds</h1>
   <p>Builds para todas as classes do <b>RO Classic Idle</b>, ajustadas às regras deste servidor: o que funciona no combate automático, de onde vem o zeny e o que a wiki confirma. Cada build explica <b>por que ela está aqui</b>.</p>
   <p style="margin-top:12px"><a onclick="nav('dupla')">→ Ver a dupla recomendada (Zeny + Up)</a> &nbsp; <a onclick="nav('regras')">→ O que muda neste servidor</a></p></div><div class="mascots" aria-hidden="true">${[1131, 1113, 1096, 1038].map(id => img(P.mon(id), 'style="height:80px;max-width:72px;object-fit:contain;filter:drop-shadow(0 4px 6px #0005)"')).join('')}</div></div>`;
-  h += `<div class="stats4"><div><b>${BUILDS.length}</b><span>builds</span></div><div><b>${DESCARTADAS.length}</b><span>builds clássicas descartadas, com o motivo</span></div><div><b>${nOk}/${Object.keys(SK).length}</b><span>skills funcionam em combate</span></div><div><b>${fmt(Object.keys(DB.items).length)}</b><span>itens no banco</span></div></div>`;
+  h += `<div class="stats4"><div><b>${BUILDS.length}</b><span>builds disponíveis</span></div><div><b>${nOk}<small style="font-size:14px;font-weight:400">/${Object.keys(SK).length}</small></b><span>skills funcionam em combate</span></div><div><b>${DESCARTADAS.length}</b><span>builds descartadas explicadas</span></div><div><b>${fmt(Object.keys(DB.items).length)}</b><span>itens no banco de dados</span></div></div>`;
   h += '<h2 class="s">Escolha sua classe</h2><p class="mut" style="margin:-4px 0 12px;font-size:13px">Toque na ☆ de uma build (na aba Builds ou no título dela) para fixá-la aqui no topo.</p><div class="tree">';
   const clsRow = k => { const bs = BUILDS.filter(b => b.classe === k); return `<div class="cls" onclick="go('${bs[0] ? bs[0].id : ''}')">${img(P.cls(k))}<div style="min-width:0"><b>${esc(pt(k))}</b><small>${bs.length} build${bs.length > 1 ? 's' : ''}: ${bs.map(b => esc(b.nome.split(' — ')[1] || b.nome)).join(' · ')}</small></div></div>`; };
   const favRow = b => `<div class="cls" onclick="go('${b.id}')">${img(P.cls(b.classe))}<div style="min-width:0"><b>${esc(bnome(b))}</b><small>${esc(pt(b.classe))} · ${b.tags.map(t => TAGN[t]).join(', ')}</small></div>${star(b)}</div>`;
@@ -138,7 +138,7 @@ function viewHome() {
 
 // ---------- BUILD ----------
 function routesFor(b) { const ns = b.caminho.map(pt), fin = pt(b.classe); return DB.routes.filter(r => ns.includes(r.classe) || r.classe.endsWith('→ ' + fin)); }
-const statBox = st => '<div class="sg">' + ATR.map(k => `<div class="sv"><span style="color:var(--${k})">${k.toUpperCase()}</span><b>${st[k] || 1}</b><i><u style="width:${(st[k] || 1) / 99 * 100}%;background:var(--${k})"></u></i></div>`).join('') + '</div>';
+const statBox = st => '<div class="sg">' + ATR.map(k => `<div class="sv"><span style="color:var(--${k})">${k.toUpperCase()}</span><b>${st[k] || 1}</b><i><u style="width:${(st[k] || 1) / 99 * 100}%;background:linear-gradient(90deg,var(--${k}),color-mix(in srgb,var(--${k}) 70%,white))"></u></i></div>`).join('') + '</div>';
 function prioridade(b) {
   const f = b.fases[b.fases.length - 1].stats;
   const up = ATR.filter(k => (f[k] || 1) > 1).sort((a, c) => (f[c] || 1) - (f[a] || 1)), um = ATR.filter(k => (f[k] || 1) <= 1);
@@ -236,10 +236,16 @@ function skillPlan(b) {
           }).join('') + '</ul>'
         : '<p class="snone">Sem pr\u00e9-requisitos para esta skill</p>';
       const selo = s ? (s.st === 'ok' ? '\u2705 Funciona em combate' : s.st === 'fora' ? '\u26d4 Sem efeito em combate' : '\u23f3 Ainda n\u00e3o funciona') : '';
+      // descricao limpa: remove linha de prereq do texto
+      const descLimpa = s ? (s.ds || '').replace(/Pr[e\u00e9]-requisitos?:[^\n]+\n?/i, '').trim() : '';
       const tipHtml = s
-        ? `<div class="sk-tip" id="${tipId}" onmouseenter="tipOver('${tipId}')" onmouseleave="tipOut('${tipId}')"><div class="sth">${img(P.skill(code))}<div><b>${esc(s.n)}</b><small>Nv m\u00e1x: ${s.max} \u00b7 ${esc(selo)}</small></div></div><div class="sreq-lbl">Precisa ter antes:</div>${reqHtml}</div>`
+        ? `<div class="sk-tip" id="${tipId}" onmouseenter="tipOver('${tipId}')" onmouseleave="tipOut('${tipId}')">`
+          + `<div class="sth">${img(P.skill(code))}<div><b>${esc(s.n)}</b><small>Nv m\u00e1x: ${s.max} \u00b7 ${esc(selo)}</small></div></div>`
+          + `<div class="sreq-lbl">Pr\u00e9-requisitos</div>${reqHtml}`
+          + (descLimpa ? `<div class="sk-desc">${esc(descLimpa)}</div>` : '')
+          + '</div>'
         : '';
-      h += `<div class="sk"><span class="sk-wrap" onmouseenter="skOver('${tipId}')" onmouseleave="skOut('${tipId}')">${img(P.skill(code))}${tipHtml}</span><span><a onclick="showSkill('${code}')">${esc(s ? s.n : code)}</a> <b class="mut">nv ${lv}</b></span><span class="lvl">${a === z ? a : a + '\u2013' + z}</span><span class="sel">${s ? badge(s.st) : ''}</span><span class="why">${esc(why)}</span></div>`;
+      h += `<div class="sk"><span class="sk-wrap" onmouseenter="skOver('${tipId}',this)" onmouseleave="skOut('${tipId}')">${img(P.skill(code))}${tipHtml}</span><span><a onclick="showSkill('${code}')">${esc(s ? s.n : code)}</a> <b class="mut">nv ${lv}</b></span><span class="lvl">${a === z ? a : a + '\u2013' + z}</span><span class="sel">${s ? badge(s.st) : ''}</span><span class="why">${esc(why)}</span></div>`;
     }
 
     h += '</div>';
@@ -326,7 +332,7 @@ function _buildSecAtributos(b, sec) {
 }
 function _buildSecEquip(b, sec) {
   let h = sec('equip', 'Equipamento: inicial → provisório → final');
-  for (const e of b.equip) h += `<div class="eq"><div class="eh"><b>${esc(e.fase)}</b>${e.porque ? `<span>${esc(e.porque)}</span>` : ''}</div><div class="items">${e.itens.map(i => itemCard(i)).join('')}</div></div>`;
+  for (const e of b.equip) { const fc = /in[ií]cio/i.test(e.fase) ? ' fase-inicio' : /final|sonho/i.test(e.fase) ? ' fase-final' : ''; h += `<div class="eq${fc}"><div class="eh"><b>${esc(e.fase)}</b>${e.porque ? `<span>${esc(e.porque)}</span>` : ''}</div><div class="items">${e.itens.map(i => itemCard(i)).join('')}</div></div>`; }
   h += `<div class="eq"><div class="eh"><b>Consumíveis</b><span>Poção de NPC é barata aqui. Configure a reposição automática antes de sair.</span></div><div class="items">${[501, 502, 503, 504, 505, 601, 645].map(i => itemCard(i)).join('')}</div></div>`;
   return h;
 }
@@ -353,7 +359,7 @@ function _buildSecFarmRota(b, sec) {
     h += `<div class="st2" onclick="showMap('${s.mapa}')">`
       + `<div class="mp" style="background-image:${mp.map(u => `url('${u}')`).join(',')}"><span class="lvb">nv ${s.de}–${s.ate}</span></div>`
       + `<div class="bd">`
-      + `<b>${esc(nome)} <span class="mut" style="font-size:11px;font-weight:400">${s.lootAbate} z/abate</span></b>`
+      + `<b>${esc(nome)} </b>${s.lootAbate > 0 ? `<span class="loot-num">${s.lootAbate} z/abate</span>` : ''}`
       + `<small style="display:block;margin-top:3px"><b>Equip:</b> ${esc(s.equip)}</small>`
       + `<small>${esc(s.porque)}</small>`
       + `<div class="mobs">${(s.targets||[]).map(t => img(P.mon(t),`title="${esc(DB.mons[t]?DB.mons[t].n:'')}"`)).join('')}</div>`
@@ -403,10 +409,25 @@ function viewBuild() {
 }
 // ---------- SKILL TOOLTIP HOVER ----------
 let _tipTimer = null;
-window.skOver = id => {
+window.skOver = (id, trigger) => {
   clearTimeout(_tipTimer);
   document.querySelectorAll('.sk-tip.vis').forEach(el => { if (el.id !== id) el.classList.remove('vis'); });
-  const el = document.getElementById(id); if (el) el.classList.add('vis');
+  const el = document.getElementById(id);
+  if (!el) return;
+  // posiciona ao lado do ícone
+  if (trigger) {
+    const r = trigger.getBoundingClientRect();
+    const tw = 288, th = el.offsetHeight || 320;
+    let left = r.right + 10;
+    let top  = r.top + r.height / 2 - Math.min(th, 320) / 2;
+    // se sai pela direita, vai para a esquerda
+    if (left + tw > window.innerWidth - 8) left = r.left - tw - 10;
+    // clamp vertical
+    top = Math.max(8, Math.min(top, window.innerHeight - Math.min(th, 320) - 8));
+    el.style.left = left + 'px';
+    el.style.top  = top  + 'px';
+  }
+  el.classList.add('vis');
 };
 window.skOut = id => { _tipTimer = setTimeout(() => { const el = document.getElementById(id); if (el) el.classList.remove('vis'); }, 180); };
 window.tipOver = id => { clearTimeout(_tipTimer); };
@@ -449,7 +470,7 @@ function viewDupla() {
     const m = DB.maps[s.mapa], mp = P.map(s.mapa);
     h += `<div class="st2" onclick="showMap('${s.mapa}')">`
       + `<div class="mp" style="background-image:${mp.map(u => `url('${u}')`).join(',')}"><span class="lvb">nv ${s.de}–${s.ate}</span></div>`
-      + `<div class="bd"><b>${esc(m?m.n:s.mapa)} <span class="mut" style="font-size:11px;font-weight:400">${s.lootAbate} z/abate</span></b>`
+      + `<div class="bd"><b>${esc(m?m.n:s.mapa)} </b>${s.lootAbate > 0 ? `<span class="loot-num">${s.lootAbate} z/abate</span>` : ''}`
       + `<small style="display:block;margin-top:2px"><b>Classes:</b> ${esc(s.classes.join(', '))}</small>`
       + `<small>${esc(s.porque)}</small>`
       + `<div class="mobs">${(s.targets||[]).map(t=>img(P.mon(t),`title="${esc(DB.mons[t]?DB.mons[t].n:'')}"`)).join('')}</div>`

@@ -1,4 +1,16 @@
-__pycache__/
-*.pyc
-t.html
-ro-wiki-sprites.json
+# Node
+node_modules/
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*~
+
+# Temp
+*.tmp
+maplist.txt
