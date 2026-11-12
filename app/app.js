@@ -44,6 +44,11 @@ try { const f = localStorage.getItem('rcib-formula'); if (f && CALC.FORMULAS[f])
 let state = { v: 'home', b: BUILDS[0].id, filt: null };
 try { Object.assign(state, JSON.parse(localStorage.getItem('rcib2') || '{}')); } catch (e) { }
 const save = () => { try { localStorage.setItem('rcib2', JSON.stringify({ v: state.v, b: state.b, filt: state.filt })); } catch (e) { } };
+// Favoritos: classes marcadas com ★ sobem para o topo do Início e da barra lateral (salvo neste navegador)
+let FAV = []; try { FAV = JSON.parse(localStorage.getItem('rcib-fav') || '[]').filter(c => BUILDS.some(b => b.classe === c)); } catch (e) { }
+const isFav = c => FAV.includes(c);
+const star = c => `<button class="star${isFav(c) ? ' on' : ''}" title="${isFav(c) ? 'Tirar dos favoritos' : 'Favoritar classe'}" aria-label="${isFav(c) ? 'Tirar dos favoritos' : 'Favoritar'} ${esc(pt(c))}" aria-pressed="${isFav(c)}" onclick="fav('${c}',event)">${isFav(c) ? '★' : '☆'}</button>`;
+window.fav = (c, ev) => { if (ev) ev.stopPropagation(); FAV = isFav(c) ? FAV.filter(x => x !== c) : [...FAV, c]; try { localStorage.setItem('rcib-fav', JSON.stringify(FAV)); } catch (e) { } render(); };
 const TEMAS = ['auto', 'light', 'dark'], TICON = { auto: '◐', light: '☀', dark: '☾' }, TNOME = { auto: 'automático', light: 'claro', dark: 'escuro' };
 function aplicaTema(t) { if (t === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t); const b = $('#tbtn'); b.textContent = TICON[t]; b.title = 'Tema: ' + TNOME[t]; }
 let tema = 'auto'; try { tema = localStorage.getItem('rcib-tema') || 'auto'; } catch (e) { }
@@ -75,11 +80,15 @@ function side() {
   if (state.v !== 'builds') { s.style.display = 'none'; return; }
   s.style.display = '';
   let h = '<div class="filt">' + ['zeny', 'up', 'masmorra', 'suporte'].map(t => `<span class="chip ${state.filt === t ? 'on' : ''}" onclick="setF('${t}')">${TAGN[t]}</span>`).join('') + '</div>';
+  const row = b => `<div class="bl ${b.id === state.b ? 'on' : ''}" onclick="go('${b.id}')"><div class="ic">${img(P.clsIcon(b.classe))}</div><div style="min-width:0"><b>${esc(b.nome.split(' — ')[1] || b.nome)}</b><small>${esc(pt(b.classe))} · ${b.tags.map(t => TAGN[t]).join(', ')}</small></div>${star(b.classe)}</div>`;
+  const passa = b => !state.filt || b.tags.includes(state.filt);
+  const favs = FAV.flatMap(c => BUILDS.filter(b => b.classe === c && passa(b)));
+  if (favs.length) h += '<div class="fam fav">★ Favoritas</div>' + favs.map(row).join('');
   for (const [base, kids] of FAMS) {
-    const bs = BUILDS.filter(b => kids.includes(b.classe) && (!state.filt || b.tags.includes(state.filt)));
+    const bs = BUILDS.filter(b => kids.includes(b.classe) && !isFav(b.classe) && passa(b));
     if (!bs.length) continue;
     h += `<div class="fam">${esc(base === 'Novice' ? 'Classes expandidas' : pt(base))}</div>`;
-    h += bs.map(b => `<div class="bl ${b.id === state.b ? 'on' : ''}" onclick="go('${b.id}')"><div class="ic">${img(P.clsIcon(b.classe))}</div><div><b>${esc(b.nome.split(' — ')[1] || b.nome)}</b><small>${esc(pt(b.classe))} · ${b.tags.map(t => TAGN[t]).join(', ')}</small></div></div>`).join('');
+    h += bs.map(row).join('');
   }
   s.innerHTML = h;
 }
@@ -93,13 +102,12 @@ function viewHome() {
   <p>Builds para todas as classes do <b>RO Classic Idle</b>, ajustadas às regras deste servidor: o que funciona no combate automático, de onde vem o zeny e o que a wiki confirma. Cada build explica <b>por que ela está aqui</b>.</p>
   <p style="margin-top:12px"><a onclick="nav('dupla')">→ Ver a dupla recomendada (Zeny + Up)</a> &nbsp; <a onclick="nav('regras')">→ O que muda neste servidor</a></p></div><div class="mascots" aria-hidden="true">${[1002, 1113, 1031, 1063, 1101].map(id => img(P.mon(id))).join('')}</div></div>`;
   h += `<div class="stats4"><div><b>${BUILDS.length}</b><span>builds</span></div><div><b>${DESCARTADAS.length}</b><span>builds clássicas descartadas, com o motivo</span></div><div><b>${nOk}/${Object.keys(SK).length}</b><span>skills funcionam em combate</span></div><div><b>${fmt(Object.keys(DB.items).length)}</b><span>itens no banco</span></div></div>`;
-  h += '<h2 class="s">Escolha sua classe</h2><div class="tree">';
+  h += '<h2 class="s">Escolha sua classe</h2><p class="mut" style="margin:-4px 0 12px;font-size:13px">Toque na ☆ de uma classe para fixá-la no topo.</p><div class="tree">';
+  const clsRow = k => { const bs = BUILDS.filter(b => b.classe === k); return `<div class="cls" onclick="go('${bs[0] ? bs[0].id : ''}')">${img(P.cls(k))}<div style="min-width:0"><b>${esc(pt(k))}</b><small>${bs.length} build${bs.length > 1 ? 's' : ''}: ${bs.map(b => esc(b.nome.split(' — ')[1] || b.nome)).join(' · ')}</small></div>${bs.length ? star(k) : ''}</div>`; };
+  if (FAV.length) h += `<div class="fcard favcard"><div class="top"><span class="favic">★</span><div>Favoritas<div class="mut" style="font-weight:400;font-size:12px">fixadas por você</div></div></div>${FAV.map(clsRow).join('')}</div>`;
   for (const [base, kids] of FAMS) {
     h += `<div class="fcard"><div class="top">${base !== 'Novice' ? img(P.cls(base)) : ''}<div>${esc(base === 'Novice' ? 'Classes expandidas' : pt(base))}<div class="mut" style="font-weight:400;font-size:12px">${base === 'Novice' ? 'vêm direto do Aprendiz' : 'segundas classes'}</div></div></div>`;
-    for (const k of kids) {
-      const bs = BUILDS.filter(b => b.classe === k);
-      h += `<div class="cls" onclick="go('${bs[0] ? bs[0].id : ''}')">${img(P.cls(k))}<div><b>${esc(pt(k))}</b><small>${bs.length} build${bs.length > 1 ? 's' : ''}: ${bs.map(b => esc(b.nome.split(' — ')[1] || b.nome)).join(' · ')}</small></div></div>`;
-    }
+    for (const k of kids) h += clsRow(k);
     h += '</div>';
   }
   h += '</div>';
@@ -270,7 +278,7 @@ function viewBuild() {
   const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados']].filter(Boolean);
   let n = 0; const sec = (id, t) => `<h2 class="s" id="${id}"><span class="n">${++n}</span>${t}</h2>`;
   let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › ${b.caminho.map(c => esc(pt(c))).join(' › ')}</div><div class="page"><div>`;
-  h += `<h1 class="t">${esc(b.nome)}</h1><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${b.tags.map(tag).join('')}</div><p class="lead">${esc(b.resumo)}</p>`;
+  h += `<h1 class="t">${esc(b.nome)} ${star(b.classe)}</h1><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${b.tags.map(tag).join('')}</div><p class="lead">${esc(b.resumo)}</p>`;
   if (b.servidor) h += `<div class="callout"><div class="h">★ Por que essa build está aqui (regras deste servidor)</div>${esc(b.servidor)}</div>`;
   h += sec('por-que', 'Por que essa build funciona') + `<div class="card"><ul class="why">${b.porque.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
   if (b.extra === 'potter') h += sec('potter', 'Vale a pena fabricar? (números do servidor)') + potterHTML();

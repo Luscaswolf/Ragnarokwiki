@@ -68,6 +68,10 @@ nav button:hover{background:var(--bg3)}nav button.on{background:var(--accbg);col
 #side{width:290px;flex:none;padding:18px 12px 40px;border-right:1px solid var(--line);position:sticky;top:calc(59px + env(safe-area-inset-top,0px));height:calc(100vh - 59px);overflow:auto;background:var(--bg)}
 #view{flex:1;min-width:0;padding:28px 36px 90px}
 .fam{margin:16px 6px 4px;display:flex;align-items:center;gap:8px;color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em}
+.star{margin-left:auto;flex:none;background:none;border:0;cursor:pointer;color:var(--mut);font-size:18px;line-height:1;padding:4px 6px;border-radius:7px;font-family:inherit}
+.star:hover{color:var(--acc);background:var(--bg3)}.star.on{color:var(--acc)}.star:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+h1.t .star{font-size:26px;vertical-align:middle;margin-left:4px}
+.fam.fav{color:var(--acc)}.favcard{border-color:var(--acc)}.favic{width:34px;text-align:center;color:var(--acc);font-size:26px}
 .fam:after{content:"";flex:1;height:1px;background:var(--line)}
 .bl{display:flex;gap:10px;align-items:center;padding:7px 9px;border-radius:9px;cursor:pointer;color:var(--tx2)}
 .bl:hover{background:var(--bg3)}.bl.on{background:var(--bg2);color:var(--tx);box-shadow:inset 3px 0 var(--acc),var(--shade)}
