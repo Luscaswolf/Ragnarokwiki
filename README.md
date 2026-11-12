@@ -9,7 +9,7 @@ As builds partem dos guias clássicos pré-renovação e são filtradas pelas re
 
 | Aba | O que faz |
 |---|---|
-| **Início** | Visão geral e atalhos. Toque na ☆ de uma classe para favoritá-la: as favoritas ficam no topo do Início e da barra lateral (salvo no navegador) |
+| **Início** | Visão geral e atalhos. Toque na ☆ de uma build (barra lateral ou título) para favoritá-la: as favoritas ficam no topo do Início e da barra lateral (salvo no navegador) |
 | **Builds** | Todas as classes: atributos por fase de nível, skills, equipamentos (onde dropa / quem vende), cartas e rota de up, com passo a passo nível a nível |
 | **Zeny + Up** | Recomenda uma dupla: 1 personagem para fazer zeny e 1 para upar/masmorra |
 | **Regras do servidor** | O que muda neste servidor e por que algumas builds clássicas não funcionam (ex.: só contam skills com selo "Funciona em combate") |
