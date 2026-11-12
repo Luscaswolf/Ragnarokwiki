@@ -1,4 +1,6 @@
 const { DB, BUILDS, REGRAS, DUPLA, CALC, SERVIDOR, DESCARTADAS } = window;
+if (!window.PARES) console.error('[RO Builds] window.PARES não definido: confira a ordem dos scripts em index.html');
+if (!window.JOBMAX) console.error('[RO Builds] window.JOBMAX não definido: confira a ordem dos scripts em index.html');
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = n => n == null ? '—' : Number(n).toLocaleString('pt-BR');
@@ -58,6 +60,21 @@ $('#tbtn').onclick = () => { tema = TEMAS[(TEMAS.indexOf(tema) + 1) % 3]; aplica
 window.nav = v => { state.v = v; render(); window.scrollTo(0, 0); };
 document.querySelectorAll('#nav button').forEach(b => b.onclick = () => nav(b.dataset.v));
 
+// ---------- URL HASH ROUTING ----------
+function hashFromState() { return '#' + state.v + (state.v === 'builds' ? '/' + state.b : ''); }
+function restoreFromHash() {
+  const h = location.hash.slice(1).split('/');
+  if (h[0]) state.v = h[0];
+  if (h[1]) state.b = h[1];
+}
+window.addEventListener('popstate', () => { restoreFromHash(); render(); });
+// ao navegar, atualiza o hash sem recarregar
+const _origNav = window.nav;
+window.nav = v => { state.v = v; history.pushState(null, '', hashFromState()); _origNav(v); };
+window.go = id => { state.v = 'builds'; state.b = id; history.pushState(null, '', hashFromState()); render(); window.scrollTo(0, 0); };
+// restaura estado da URL se houver hash ao abrir
+if (location.hash) restoreFromHash();
+
 const tag = t => `<span class="chip t-${t}">${TAGN[t] || t}</span>`;
 const badge = st => { const s = SEL[st] || ['', st]; return `<span class="badge ${s[0]}">${s[1]}</span>`; };
 const locName = it => [...new Set((it.loc || []).map(x => LOC[x] || x))].join('/') || ({ Card: 'Carta', Healing: 'Cura', Etc: 'Material', Usable: 'Usável' }[it.t] || it.t);
@@ -80,6 +97,7 @@ function side() {
   const s = $('#side');
   if (state.v !== 'builds') { s.style.display = 'none'; return; }
   s.style.display = '';
+  const _sideScrollTop = s.scrollTop;
   let h = '<div class="filt">' + ['zeny', 'up', 'masmorra', 'suporte'].map(t => `<span class="chip ${state.filt === t ? 'on' : ''}" onclick="setF('${t}')">${TAGN[t]}</span>`).join('') + '</div>';
   const row = b => `<div class="bl ${b.id === state.b ? 'on' : ''}" onclick="go('${b.id}')"><div class="ic">${img(P.clsIcon(b.classe))}</div><div style="min-width:0"><b>${esc(b.nome.split(' — ')[1] || b.nome)}</b><small>${esc(pt(b.classe))} · ${b.tags.map(t => TAGN[t]).join(', ')}</small></div>${star(b)}</div>`;
   const passa = b => !state.filt || b.tags.includes(state.filt);
@@ -92,16 +110,16 @@ function side() {
     h += bs.map(row).join('');
   }
   s.innerHTML = h;
+  s.scrollTop = _sideScrollTop;
 }
 window.setF = t => { state.filt = state.filt === t ? null : t; render(); };
-window.go = id => { state.v = 'builds'; state.b = id; render(); window.scrollTo(0, 0); };
 
 // ---------- HOME ----------
 function viewHome() {
   const nOk = Object.values(SK).filter(s => s.st === 'ok').length;
   let h = `<div class="hero2"><div style="min-width:0"><h1>Codex de Builds</h1>
   <p>Builds para todas as classes do <b>RO Classic Idle</b>, ajustadas às regras deste servidor: o que funciona no combate automático, de onde vem o zeny e o que a wiki confirma. Cada build explica <b>por que ela está aqui</b>.</p>
-  <p style="margin-top:12px"><a onclick="nav('dupla')">→ Ver a dupla recomendada (Zeny + Up)</a> &nbsp; <a onclick="nav('regras')">→ O que muda neste servidor</a></p></div><div class="mascots" aria-hidden="true">${[1002, 1113, 1031, 1063, 1101].map(id => img(P.mon(id))).join('')}</div></div>`;
+  <p style="margin-top:12px"><a onclick="nav('dupla')">→ Ver a dupla recomendada (Zeny + Up)</a> &nbsp; <a onclick="nav('regras')">→ O que muda neste servidor</a></p></div><div class="mascots" aria-hidden="true">${[1131, 1113, 1096, 1038].map(id => img(P.mon(id), 'style="height:80px;max-width:72px;object-fit:contain;filter:drop-shadow(0 4px 6px #0005)"')).join('')}</div></div>`;
   h += `<div class="stats4"><div><b>${BUILDS.length}</b><span>builds</span></div><div><b>${DESCARTADAS.length}</b><span>builds clássicas descartadas, com o motivo</span></div><div><b>${nOk}/${Object.keys(SK).length}</b><span>skills funcionam em combate</span></div><div><b>${fmt(Object.keys(DB.items).length)}</b><span>itens no banco</span></div></div>`;
   h += '<h2 class="s">Escolha sua classe</h2><p class="mut" style="margin:-4px 0 12px;font-size:13px">Toque na ☆ de uma build (na aba Builds ou no título dela) para fixá-la aqui no topo.</p><div class="tree">';
   const clsRow = k => { const bs = BUILDS.filter(b => b.classe === k); return `<div class="cls" onclick="go('${bs[0] ? bs[0].id : ''}')">${img(P.cls(k))}<div style="min-width:0"><b>${esc(pt(k))}</b><small>${bs.length} build${bs.length > 1 ? 's' : ''}: ${bs.map(b => esc(b.nome.split(' — ')[1] || b.nome)).join(' · ')}</small></div></div>`; };
@@ -272,21 +290,8 @@ window.potUpd = () => {
   el.innerHTML = h;
   renUpd();
 };
-function viewBuild() {
-  const b = BUILDS.find(x => x.id === state.b) || BUILDS[0]; state.b = b.id;
-  const last = b.fases[b.fases.length - 1], main = (b.principal && b.skills.find(s => s[0] === b.principal)) || [...b.skills].filter(s => SK[s[0]] && SK[s[0]].st === 'ok').sort((x, y) => y[1] - x[1])[0];
-  const others = BUILDS.filter(x => x.classe === b.classe && x.id !== b.id);
-  const rs = routesFor(b);
-  const pares = (window.PARES || {})[b.id] || [];
-  const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados']].filter(Boolean);
-  let n = 0; const sec = (id, t) => `<h2 class="s" id="${id}"><span class="n">${++n}</span>${t}</h2>`;
-  let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › ${b.caminho.map(c => esc(pt(c))).join(' › ')}</div><div class="page"><div>`;
-  h += `<h1 class="t">${esc(b.nome)} ${star(b)}</h1><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${b.tags.map(tag).join('')}</div><p class="lead">${esc(b.resumo)}</p>`;
-  if (b.servidor) h += `<div class="callout"><div class="h">★ Por que essa build está aqui (regras deste servidor)</div>${esc(b.servidor)}</div>`;
-  h += sec('por-que', 'Por que essa build funciona') + `<div class="card"><ul class="why">${b.porque.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
-  if (b.extra === 'potter') h += sec('potter', 'Vale a pena fabricar? (números do servidor)') + potterHTML();
-  // ---- atributos ----
-  h += sec('atributos', 'Atributos: como distribuir');
+function _buildSecAtributos(b, sec) {
+  let h = sec('atributos', 'Atributos: como distribuir');
   h += `<div class="card"><b>Regra de ouro desta build:</b> ${prioridade(b)}<div class="mut" style="margin-top:6px;font-size:13px">Na janela de status, coloque os pontos na ordem de prioridade da fase em que você está. Dica: o custo de cada ponto sobe a cada 10 (de 1→10 custa 2, de 90→99 custa 11), então atributo que só precisa ficar baixo deve ficar em 1.</div></div>`;
   b.fases.forEach((f, i) => {
     const L = CALC.faseNivel(f.nv), u = CALC.custo(f.stats), hv = CALC.pontos(L), prev = i ? b.fases[i - 1].stats : { str: 1, agi: 1, vit: 1, int: 1, dex: 1, luk: 1 };
@@ -294,38 +299,61 @@ function viewBuild() {
     h += `<div class="phase" onclick="derived('${b.id}',${i})"><div class="lv"><b>Nível ${esc(f.nv)}</b><span class="pts ${u > hv ? 'over' : ''}">${u} / ${hv} pontos</span></div>${statBox(f.stats)}<div class="txt"><div style="margin-bottom:4px">${ord.map(([k, d], j) => `<span class="chip" style="border-color:var(--${k});color:var(--${k})">${j + 1}º ${k.toUpperCase()} +${d}</span>`).join(' ')}</div>${esc(f.foco)}${f.porque ? `<em>${esc(f.porque)}</em>` : ''}</div></div><div id="der-${i}"></div>`;
   });
   h += `<details class="card"><summary style="cursor:pointer"><b>Passo a passo nível a nível</b> <span class="mut">(como os atributos devem estar a cada 5 níveis)</span></summary>${stepTable(b)}</details>`;
-  // ---- skills por job ----
-  h += sec('skills', 'Skills: ordem por Job') + skillPlan(b);
-  if (pares.length) {
-    h += sec('pares', 'Combina com: personagem principal ou secundário') + `<p class="mut">Se você escolher esta build, estes personagens completam a conta (zeny, cura, poções ou EXP em grupo).</p><div class="duo">`;
-    h += pares.map(([id, papel, why]) => { const o = BUILDS.find(x => x.id === id); return o ? `<div class="card" onclick="go('${id}')">${img(P.cls(o.classe))}<div><span class="chip">${esc(papel)}</span><div style="font-weight:700;margin:6px 0 2px">${esc(o.nome)}</div><div class="mut" style="font-size:13px">${esc(why)}</div></div></div>` : ''; }).join('') + '</div>';
-  }
-  h += sec('equip', 'Equipamento: inicial → provisório → final');
+  return h;
+}
+function _buildSecEquip(b, sec) {
+  let h = sec('equip', 'Equipamento: inicial → provisório → final');
   for (const e of b.equip) h += `<div class="eq"><div class="eh"><b>${esc(e.fase)}</b>${e.porque ? `<span>${esc(e.porque)}</span>` : ''}</div><div class="items">${e.itens.map(i => itemCard(i)).join('')}</div></div>`;
   h += `<div class="eq"><div class="eh"><b>Consumíveis</b><span>Poção de NPC é barata aqui. Configure a reposição automática antes de sair.</span></div><div class="items">${[501, 502, 503, 504, 505, 601, 645].map(i => itemCard(i)).join('')}</div></div>`;
-  h += sec('cartas', 'Cartas') + `<p class="mut">Cartas só caem como drop lendário (raras). Monte a build para funcionar sem elas.</p><div class="items" style="padding:0">${b.cartas.map(([id, slot, why]) => itemCard(id, slot + (why ? ' — ' + why : ''))).join('')}</div>`;
-  if (rs.length) {
-    h += sec('rota', 'Rota de up (wiki do servidor)');
-    for (const r of rs) {
-      h += `<p><b>${esc(r.classe)}</b> <span class="mut">— ${esc(r.build)}</span></p><div class="route">`;
-      for (const s of r.stages) {
-        const m = DB.maps[s.mapa], mp = P.map(s.mapa);
-        h += `<div class="st2" onclick="showMap('${s.mapa}')"><div class="mp" style="background-image:${mp.map(u => `url('${u}')`).join(',')}"><span class="lvb">nv ${s.de}–${s.ate}</span></div><div class="bd"><b>${esc(m ? m.n : s.mapa)}</b><small>${esc(s.alvo)}</small><div class="mobs">${(s.targets || []).map(t => img(P.mon(t), `title="${esc(DB.mons[t] ? DB.mons[t].n : '')}"`)).join('')}</div></div></div>`;
-      }
-      h += `</div>${r.note ? `<div class="warn">${esc(r.note)}</div>` : ''}`;
+  return h;
+}
+function _buildSecRota(b, rs, sec) {
+  let h = sec('rota', 'Rota de up (wiki do servidor)');
+  for (const r of rs) {
+    h += `<p><b>${esc(r.classe)}</b> <span class="mut">— ${esc(r.build)}</span></p><div class="route">`;
+    for (const s of r.stages) {
+      const m = DB.maps[s.mapa], mp = P.map(s.mapa);
+      h += `<div class="st2" onclick="showMap('${s.mapa}')"><div class="mp" style="background-image:${mp.map(u => `url('${u}')`).join(',')}"><span class="lvb">nv ${s.de}–${s.ate}</span></div><div class="bd"><b>${esc(m ? m.n : s.mapa)}</b><small>${esc(s.alvo)}</small><div class="mobs">${(s.targets || []).map(t => img(P.mon(t), `title="${esc(DB.mons[t] ? DB.mons[t].n : '')}"`)).join('')}</div></div></div>`;
     }
+    h += `</div>${r.note ? `<div class="warn">${esc(r.note)}</div>` : ''}`;
   }
-  if (b.cuidados.length) h += sec('cuidados', 'Cuidados') + b.cuidados.map(c => `<div class="warn">${esc(c)}</div>`).join('');
-  h += '</div>';
-  // infobox
-  h += `<aside class="infobox"><div class="hero">${img(P.cls(b.classe))}</div><div class="ttl">${esc(pt(b.classe))}</div><dl>
+  return h;
+}
+function _buildInfobox(b, last, main, others, secs) {
+  return `<aside class="infobox"><div class="hero">${img(P.cls(b.classe))}</div><div class="ttl">${esc(pt(b.classe))}</div><dl>
     <dt>Caminho</dt><dd>${b.caminho.map(c => esc(pt(c))).join(' → ')}</dd>
     <dt>Foco</dt><dd>${b.tags.map(tag).join(' ')}</dd>
     ${main ? `<dt>Skill principal</dt><dd>${SK[main[0]] ? esc(SK[main[0]].n) : ''}</dd>` : ''}
     <dt>Atributos no nível 99</dt><dd>${ATR.filter(k => (last.stats[k] || 1) > 1).map(k => `<b style="color:var(--${k})">${k.toUpperCase()}</b> ${last.stats[k]}`).join(' · ')}</dd>
     ${DB.jobs[b.classe] && DB.jobs[b.classe].master ? `<dt>Mestre da classe</dt><dd>${esc(DB.jobs[b.classe].master.name.split('#')[0])} <span class="mut">(${esc(DB.jobs[b.classe].master.map)})</span></dd>` : ''}
     ${others.length ? `<dt>Outras builds de ${esc(pt(b.classe))}</dt><dd>${others.map(o => `<a onclick="go('${o.id}')">${esc(o.nome.split(' — ')[1])}</a>`).join('<br>')}</dd>` : ''}
-  </dl><div class="toc"><div class="mut" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Nesta página</div>${secs.map(([id, n]) => `<a href="#${id}">${n}</a>`).join('')}</div></aside></div>`;
+  </dl><div class="toc"><div class="mut" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Nesta página</div>${secs.map(([id, n]) => `<a href="#${id}">${n}</a>`).join('')}</div></aside>`;
+}
+function viewBuild() {
+  const b = BUILDS.find(x => x.id === state.b) || BUILDS[0]; state.b = b.id;
+  const last = b.fases[b.fases.length - 1], main = (b.principal && b.skills.find(s => s[0] === b.principal)) || [...b.skills].filter(s => SK[s[0]] && SK[s[0]].st === 'ok').sort((x, y) => y[1] - x[1])[0];
+  const others = BUILDS.filter(x => x.classe === b.classe && x.id !== b.id);
+  const rs = routesFor(b);
+  const pares = (window.PARES || {})[b.id] || [];
+  const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados']].filter(Boolean);
+  const sec = (id, t) => `<h2 class="s" id="${id}">${t}</h2>`;
+  let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › ${b.caminho.map(c => esc(pt(c))).join(' › ')}</div><div class="page"><div>`;
+  h += `<h1 class="t">${esc(b.nome)} ${star(b)}</h1><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${b.tags.map(tag).join('')}</div><p class="lead">${esc(b.resumo)}</p>`;
+  if (b.servidor) h += `<div class="callout"><div class="h">★ Por que essa build está aqui (regras deste servidor)</div>${esc(b.servidor)}</div>`;
+  h += sec('por-que', 'Por que essa build funciona') + `<div class="card"><ul class="why">${b.porque.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  if (b.extra === 'potter') h += sec('potter', 'Vale a pena fabricar? (números do servidor)') + potterHTML();
+  h += _buildSecAtributos(b, sec);
+  h += sec('skills', 'Skills: ordem por Job') + skillPlan(b);
+  if (pares.length) {
+    h += sec('pares', 'Combina com: personagem principal ou secundário') + `<p class="mut">Se você escolher esta build, estes personagens completam a conta (zeny, cura, poções ou EXP em grupo).</p><div class="duo">`;
+    h += pares.map(([id, papel, why]) => { const o = BUILDS.find(x => x.id === id); return o ? `<div class="card" onclick="go('${id}')">${img(P.cls(o.classe))}<div><span class="chip">${esc(papel)}</span><div style="font-weight:700;margin:6px 0 2px">${esc(o.nome)}</div><div class="mut" style="font-size:13px">${esc(why)}</div></div></div>` : ''; }).join('') + '</div>';
+  }
+  h += _buildSecEquip(b, sec);
+  h += sec('cartas', 'Cartas') + `<p class="mut">Cartas só caem como drop lendário (raras). Monte a build para funcionar sem elas.</p><div class="items" style="padding:0">${b.cartas.map(([id, slot, why]) => itemCard(id, slot + (why ? ' — ' + why : ''))).join('')}</div>`;
+  if (rs.length) h += _buildSecRota(b, rs, sec);
+  if (b.cuidados.length) h += sec('cuidados', 'Cuidados') + b.cuidados.map(c => `<div class="warn">${esc(c)}</div>`).join('');
+  h += '</div>';
+  h += _buildInfobox(b, last, main, others, secs) + '</div>';
   $('#view').innerHTML = h;
   if (b.extra === 'potter') potUpd();
 }
@@ -408,7 +436,16 @@ document.addEventListener('click', e => { if (!e.target.closest('.gs')) $('#gsr'
 function viewDB() {
   $('#view').innerHTML = `<div class="crumbs"><a onclick="nav('home')">Início</a> › Banco de dados</div><h1 class="t">Banco de dados</h1><p class="lead">${fmt(Object.keys(DB.items).length)} itens · ${fmt(Object.keys(DB.mons).length)} monstros · ${fmt(Object.keys(DB.maps).length)} mapas · ${fmt(Object.keys(SK).length)} skills, tudo da wiki do servidor.</p>
   <div class="card"><input type="search" id="q" placeholder="Raydric, Kataná, Orc, Payon, Nevasca…"><label class="mut" style="display:block;margin-top:8px"><input type="checkbox" id="qc"> só cartas</label></div><div class="res card" id="res" style="padding:4px"></div>`;
-  const run = () => { const r = search($('#q').value, $('#qc').checked, 80); $('#res').innerHTML = resHTML(r) || '<p class="mut" style="padding:8px">Digite pelo menos 2 letras.</p>'; };
+  const run = () => {
+    const q = $('#q').value, onlyCards = $('#qc').checked;
+    const r = search(q, onlyCards, 80);
+    if (q.length < 2) {
+      $('#res').innerHTML = `<div style="padding:14px 10px;color:var(--mut)"><div style="font-size:15px;font-weight:700;margin-bottom:8px">O que você pode buscar</div><div style="display:flex;flex-wrap:wrap;gap:6px">${['Raydric','Oridecon','Kataná','Poring','Payon','Anubis','Nevasca','Kyrie','Furto'].map(s=>`<span class="chip" style="cursor:pointer" onclick="document.getElementById('q').value='${s}';run()">${s}</span>`).join('')}</div></div>`;
+    } else {
+      $('#res').innerHTML = resHTML(r) || `<p class="mut" style="padding:14px 10px">Nenhum resultado para "<b>${esc(q)}</b>". Tente o nome em português ou o nome do jogo original.</p>`;
+    }
+  };
+  window.run = run;
   $('#q').oninput = run; $('#qc').onchange = run; run(); $('#q').focus();
 }
 // ---------- MODAIS ----------
