@@ -1,0 +1,27 @@
+BUILDS RO CLASSIC IDLE
+======================
+Abra o arquivo index.html (duplo clique). Funciona offline, no navegador.
+
+Abas:
+- Builds ............ todas as classes, atributos por fase, skills, equipamentos (com onde dropa/quem vende), cartas e rota de up
+- Zeny + Up ......... recomendação de dupla: 1 personagem pra zeny + 1 pra up/masmorra
+- Regras do servidor  o que muda nesse servidor e por quê algumas builds clássicas não servem
+- Planejador ........ mexa nos atributos e veja custo em pontos e atributos derivados
+- Banco de dados .... busca de itens, cartas, monstros, mapas e skills (clique em mapa = estimativa de zeny/abate)
+
+Pastas:
+- data/ro-wiki-dump.json ... banco completo baixado da wiki
+- app/builds.js ............ as builds (dá pra editar)
+- tools/ ................... scripts: build_db.py (regera app/db.js) e validate.js (confere as builds)
+
+Para atualizar quando a wiki mudar: baixe de novo o ro-wiki-dump.json pelo console (F12),
+coloque em data/ e rode:  python tools/build_db.py   e depois   node tools/validate.js
+
+SPRITES
+- Já estão em app/img/dp (itens, cartas, monstros, skills, classes e mapas das rotas), baixadas da Divine Pride.
+- Para baixar de novo: tools/sprites.txt tem a lista (URL e destino).
+
+VERIFICAÇÕES (rode depois de editar as builds)
+  node tools/prereq.js       -> pré-requisitos de skill e pontos de Job
+  node tools/stats_check.js  -> atributos x tabela real de pontos do servidor
+  node tools/validate.js     -> itens/skills existem e selos de combate
