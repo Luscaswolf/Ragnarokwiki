@@ -285,14 +285,14 @@ window.BUILDS = [
   ],
   fases: [
     { nv: '1–10 (Aprendiz)', stats: { str: 12, agi: 8, vit: 5, int: 1, dex: 10, luk: 1 }, foco: 'Habilidades Básicas.', porque: '' },
-    { nv: '11–49 (Mercador)', stats: { str: 45, agi: 30, vit: 15, int: 1, dex: 25, luk: 1 }, foco: 'Aumentar Capacidade 5 → Desconto 3 → Superfaturar 10. Mammonita só se sobrar zeny.', porque: 'Faça Superfaturar cedo: todo loot vendido daqui em diante rende mais.' },
+    { nv: '11–49 (Mercador)', stats: { str: 45, agi: 30, vit: 15, int: 1, dex: 25, luk: 1 }, foco: 'Aumentar Capacidade 5 → Desconto 3 → Superfaturar 10 → Usar Carrinho 10 (no 10 o carrinho não reduz a velocidade). Mammonita só se sobrar zeny.', porque: 'Faça Superfaturar cedo: todo loot vendido daqui em diante rende mais.' },
     { nv: '50–70 (Ferreiro)', stats: { str: 60, agi: 50, vit: 25, int: 1, dex: 40, luk: 1 }, foco: 'Adrenalina Pura 5, Perícia em Armamento, Força Violenta.', porque: '' },
     { nv: '71–99 (Ferreiro)', stats: { str: 82, agi: 78, vit: 36, int: 1, dex: 58, luk: 1 }, foco: 'Manejo Perfeito, Amplificar Poder. Mapas de bom loot.', porque: 'STR 80 = +2400 de carga para loot.' },
   ],
   skills: [
     ['NV_BASIC', 9, ''], ['MC_INCCARRY', 3, 'Requisito (e mais carga, confirme no jogo).'], ['MC_DISCOUNT', 3, 'Requisito.'],
     ['MC_OVERCHARGE', 10, 'O motor do zeny. Teste no jogo: venda um item antes e depois de aprender.'],
-    ['MC_PUSHCART', 5, 'Carrinho: +espaço para loot e requisito de Cavalo-de-Pau.'], ['MC_MAMMONITE', 5, 'Dano extra, mas gasta zeny por golpe.'], ['MC_LOUD', 1, 'STR +4.'],
+    ['MC_PUSHCART', 10, 'Deixe no 10: abaixo disso o carrinho reduz a velocidade de movimento. Também dá espaço para loot e é requisito de Cavalo-de-Pau.'], ['MC_MAMMONITE', 5, 'Dano extra, mas gasta zeny por golpe.'], ['MC_LOUD', 1, 'STR +4.'],
     ['BS_HILTBINDING', 1, 'STR +1, ATK +4.'], ['BS_WEAPONRESEARCH', 10, '+ATK e +acerto.'], ['BS_SKINTEMPER', 1, 'Requisito.'],
     ['BS_HAMMERFALL', 1, 'Requisito.'], ['BS_ADRENALINE', 5, 'Velocidade de ataque com machado/maça.'], ['BS_WEAPONPERFECT', 5, 'Sem penalidade de tamanho.'],
     ['BS_OVERTHRUST', 5, '+ATK.'], ['BS_MAXIMIZE', 5, 'Dano máximo sempre.'],
