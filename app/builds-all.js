@@ -649,6 +649,64 @@ window.BUILDS.push(
   ],
   cartas: [[4058, 'Escudo', 'Sapo de Thara.'], [4233, 'Armadura', 'Leopardo Filhote.'], [4133, 'Capa', 'Raydric.']],
   cuidados: ['O Homunculus é sorteado (Lif, Amistr, Filir ou Vanilmirth). Sem skills, Amistr (mais HP) e Filir (ataque rápido) rendem mais.', 'Se as skills do Homunculus forem liberadas numa atualização, esta build fica bem mais forte: confira o selo na aba Banco.'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Homúnculo invocado antes de entrar.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). O Homúnculo tankar enquanto você ataca é a maior vantagem desta build: sobrevive mais tempo no idle antes de precisar de poção."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Machado de Duas Mãos [1]. Superfaturar 10 ativo.",
+      "porque": "Les: Folha Afiada (20%, 403z). Com Homúnculo segurando o aggro você quase não toma dano e gasta pouquíssima poção."
+    },
+    {
+      "mapa": "alde_dun02",
+      "de": 60,
+      "ate": 72,
+      "targets": [
+        1213
+      ],
+      "lootAbate": 179,
+      "equip": "Machado de Duas Mãos [1]. Homúnculo bem alimentado.",
+      "porque": "Grand Orc: Amuleto dos Orcs (75%, 71z) + Dente de Ogro (25%, 329z). Amistr ou Filir seguram o Grand Orc enquanto você bate."
+    },
+    {
+      "mapa": "ein_fild06",
+      "de": 73,
+      "ate": 89,
+      "targets": [
+        1201
+      ],
+      "lootAbate": 159,
+      "equip": "Machado de Duas Mãos [1]. STR 75+ para dano.",
+      "porque": "Rybio: monstro de nível médio-alto. O Homúnculo reduz muito o dano recebido nessa faixa."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Equipamento final. VIT 60 para aguentar.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Pérola (2,5%, 3000z). Homúnculo + Superfaturar = máxima eficiência de farm."
+    }
+  ],
 },
 // ---------------- CAVALEIRO AGI ----------------
 {
@@ -1401,26 +1459,26 @@ window.REGRAS.splice(2, 0, { t: 'Custo dos atributos: a partir do 10 já custa 3
     'alquimista-acido': [{ str: 53, agi: 15, vit: 20, int: 10, dex: 30, luk: 2 }, { str: 80, agi: 20, vit: 55, int: 45, dex: 74, luk: 2 }],
     'assassino-katar': [{ str: 10, agi: 20, vit: 1, int: 1, dex: 8, luk: 1 }, { str: 38, agi: 50, vit: 10, int: 1, dex: 24, luk: 1 }, { str: 80, agi: 90, vit: 26, int: 10, dex: 51, luk: 2 }],
     'arruaceiro-farm': [{ str: 35, agi: 44, vit: 10, int: 1, dex: 35, luk: 2 }, { str: 72, agi: 80, vit: 32, int: 2, dex: 65, luk: 23 }],
-    'superaprendiz': [{ str: 75, agi: 80, vit: 54, int: 1, dex: 52, luk: 3 }],
-    'justiceiro-rifle': [{ str: 15, agi: 75, vit: 40, int: 1, dex: 99, luk: 26 }],
-    'ninja-magico': [{ str: 1, agi: 25, vit: 36, int: 99, dex: 81, luk: 2 }],
-    'taekwon-chutes': [{ str: 75, agi: 88, vit: 36, int: 1, dex: 56, luk: 3 }],
+    'superaprendiz': [{ str: 35, agi: 40, vit: 20, int: 1, dex: 25, luk: 1 }, { str: 55, agi: 65, vit: 35, int: 1, dex: 38, luk: 1 }, { str: 75, agi: 80, vit: 54, int: 1, dex: 52, luk: 3 }],
+    'justiceiro-rifle': [{ str: 10, agi: 50, vit: 20, int: 1, dex: 70, luk: 10 }, { str: 15, agi: 75, vit: 40, int: 1, dex: 99, luk: 26 }],
+    'ninja-magico': [{ str: 1, agi: 15, vit: 20, int: 60, dex: 50, luk: 1 }, { str: 1, agi: 25, vit: 36, int: 99, dex: 81, luk: 2 }],
+    'taekwon-chutes': [{ str: 40, agi: 55, vit: 20, int: 1, dex: 25, luk: 1 }, { str: 75, agi: 88, vit: 36, int: 1, dex: 56, luk: 3 }],
     'alquimista-homunculus': [{ str: 53, agi: 15, vit: 20, int: 10, dex: 30, luk: 1 }, { str: 55, agi: 15, vit: 41, int: 30, dex: 52, luk: 1 }, { str: 75, agi: 15, vit: 60, int: 45, dex: 77, luk: 1 }],
     'cavaleiro-agi': [{ str: 45, agi: 42, vit: 10, int: 1, dex: 26, luk: 1 }, { str: 80, agi: 90, vit: 30, int: 1, dex: 51, luk: 3 }],
     'cavaleiro-lanca': [{ str: 53, agi: 5, vit: 31, int: 1, dex: 30, luk: 1 }, { str: 85, agi: 11, vit: 72, int: 20, dex: 70, luk: 2 }],
     'templario-gc': [{ str: 35, agi: 1, vit: 43, int: 20, dex: 30, luk: 2 }, { str: 40, agi: 1, vit: 80, int: 80, dex: 58, luk: 3 }],
-    'templario-lanca': [{ str: 80, agi: 80, vit: 40, int: 1, dex: 58, luk: 3 }],
+    'templario-lanca': [{ str: 35, agi: 50, vit: 20, int: 1, dex: 25, luk: 1 }, { str: 80, agi: 80, vit: 40, int: 1, dex: 58, luk: 3 }],
     'bruxo-jupitel': [{ str: 1, agi: 1, vit: 11, int: 57, dex: 40, luk: 1 }, { str: 1, agi: 1, vit: 27, int: 99, dex: 92, luk: 1 }],
-    'sabio-suporte': [{ str: 1, agi: 1, vit: 61, int: 90, dex: 82, luk: 1 }],
+    'sabio-suporte': [{ str: 1, agi: 1, vit: 20, int: 60, dex: 45, luk: 1 }, { str: 1, agi: 1, vit: 61, int: 90, dex: 82, luk: 1 }],
     'cacador-armadilha': [{ str: 10, agi: 30, vit: 11, int: 20, dex: 55, luk: 1 }, { str: 15, agi: 30, vit: 40, int: 73, dex: 99, luk: 2 }],
-    'cacador-falcao': [{ str: 1, agi: 50, vit: 21, int: 50, dex: 98, luk: 50 }],
+    'cacador-falcao': [{ str: 1, agi: 25, vit: 10, int: 20, dex: 60, luk: 25 }, { str: 1, agi: 50, vit: 21, int: 50, dex: 98, luk: 50 }],
     'assassino-critico': [{ str: 35, agi: 50, vit: 10, int: 1, dex: 20, luk: 14 }, { str: 70, agi: 90, vit: 20, int: 1, dex: 35, luk: 54 }],
-    'arruaceiro-arco': [{ str: 20, agi: 81, vit: 30, int: 1, dex: 99, luk: 21 }],
-    'sacerdote-batalha': [{ str: 80, agi: 75, vit: 36, int: 20, dex: 61, luk: 1 }],
-    'ferreiro-carrinho': [{ str: 90, agi: 30, vit: 57, int: 21, dex: 70, luk: 1 }],
-    'superaprendiz-mago': [{ str: 1, agi: 1, vit: 50, int: 99, dex: 80, luk: 1 }],
-    'ninja-arremesso': [{ str: 61, agi: 60, vit: 30, int: 1, dex: 99, luk: 3 }],
-    'justiceiro-pistola': [{ str: 1, agi: 71, vit: 40, int: 30, dex: 99, luk: 21 }],
+    'arruaceiro-arco': [{ str: 10, agi: 45, vit: 15, int: 1, dex: 50, luk: 10 }, { str: 20, agi: 81, vit: 30, int: 1, dex: 99, luk: 21 }],
+    'sacerdote-batalha': [{ str: 40, agi: 40, vit: 20, int: 10, dex: 30, luk: 1 }, { str: 80, agi: 75, vit: 36, int: 20, dex: 61, luk: 1 }],
+    'ferreiro-carrinho': [{ str: 45, agi: 15, vit: 25, int: 10, dex: 30, luk: 1 }, { str: 90, agi: 30, vit: 57, int: 21, dex: 70, luk: 1 }],
+    'superaprendiz-mago': [{ str: 1, agi: 1, vit: 20, int: 60, dex: 40, luk: 1 }, { str: 1, agi: 1, vit: 50, int: 99, dex: 80, luk: 1 }],
+    'ninja-arremesso': [{ str: 25, agi: 40, vit: 15, int: 1, dex: 60, luk: 1 }, { str: 61, agi: 60, vit: 30, int: 1, dex: 99, luk: 3 }],
+    'justiceiro-pistola': [{ str: 1, agi: 40, vit: 20, int: 15, dex: 70, luk: 10 }, { str: 1, agi: 71, vit: 40, int: 30, dex: 99, luk: 21 }],
     'alquimista-potter': [{ str: 1, agi: 1, vit: 5, int: 1, dex: 20, luk: 12 }, { str: 1, agi: 1, vit: 6, int: 1, dex: 52, luk: 48 }, { str: 1, agi: 1, vit: 6, int: 1, dex: 99, luk: 98 }],
   };
   for (const [id, fs] of Object.entries(ST)) fs.forEach((s, i) => { B(id).fases[i].stats = s; });

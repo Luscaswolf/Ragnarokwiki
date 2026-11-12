@@ -37,7 +37,7 @@ const P = {
   card: id => [`app/img/dp/card/${id}.png`, `${DP}items/collection/${id}.png`, ...P.item(id)],
   mon: id => [`app/img/dp/mob/${id}.png`, `${DP}mobs/png/${id}.png`, wiki(DB.mons[id] && DB.mons[id].img ? `assets/project/monsters/${id}.png` : null)],
   skill: c => SK[c] ? [`app/img/dp/skill/${SK[c].id}.png`, `${DP}skill/${SK[c].id}.png`, wiki(SK[c].img ? `assets/project/skills/${c}.png` : null)] : null,
-  map: k => [`app/img/dp/map/${k}.png`, wiki(DB.maps[k] && DB.maps[k].img ? `assets/project/maps/${k}.webp` : null)].filter(Boolean),
+  map: k => [`app/img/dp/map/${k}.webp`, `app/img/dp/map/${k}.png`, wiki(DB.maps[k] && DB.maps[k].img ? `assets/project/maps/${k}.webp` : null)].filter(Boolean),
   cls: n => CID[n] != null ? [`app/img/dp/job/${CID[n]}.png`, `${DP}jobs/icon_jobs_${CID[n]}.png`, wiki(DB.portraits[n])] : null,
 };
 P.clsIcon = P.cls;
@@ -217,7 +217,18 @@ function skillPlan(b) {
     let acc = 0;
     for (const [code, lv, why] of list) {
       const s = SK[code], a = acc + 2, z = acc + lv + 1; acc += lv;
-      h += `<div class="sk"><span>${img(P.skill(code))}</span><span><a onclick="showSkill('${code}')">${esc(s ? s.n : code)}</a> <b class="mut">nv ${lv}</b></span><span class="lvl">${a === z ? a : a + '–' + z}</span><span class="sel">${s ? badge(s.st) : ''}</span><span class="why">${esc(why)}</span></div>`;
+      {
+      // extrai pré-requisitos do campo ds
+      let reqLine = '';
+      if (s && s.ds) {
+        const m = s.ds.match(/Pr[eé]-requisitos?:([^\n]+)/i);
+        if (m) reqLine = m[1].trim();
+      }
+      const tipHtml = s ? `<div class="sk-tip">
+        <div class="th">${img(P.skill(code), 'style="width:36px;height:36px"')}<div><b>${esc(s.n)}</b><small>Nível máximo: ${s.max} · ${s.st === 'ok' ? 'Funciona em combate' : s.st === 'fora' ? 'Sem efeito em combate' : 'Ainda não funciona'}</small></div></div>${reqLine ? `<div class="req">Pré-requisitos: ${esc(reqLine)}</div>` : ''}<div class="desc">${esc((s.ds||'').replace(/Pr[eé]-requisitos?:[^\n]+\n?/i,'').trim().slice(0,400))}</div>
+      </div>` : '';
+      h += `<div class="sk"><span class="sk-wrap">${img(P.skill(code))}${tipHtml}</span><span><a onclick="showSkill('${code}')">${esc(s ? s.n : code)}</a> <b class="mut">nv ${lv}</b></span><span class="lvl">${a === z ? a : a + '–' + z}</span><span class="sel">${s ? badge(s.st) : ''}</span><span class="why">${esc(why)}</span></div>`;
+    };
     }
     h += '</div>';
   });

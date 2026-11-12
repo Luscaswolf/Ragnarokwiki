@@ -182,6 +182,26 @@ input[type=range]{accent-color:var(--acc)}
   .duo,.stats4,.plan{grid-template-columns:1fr}.hwrap{flex-wrap:wrap}.hright{width:100%}.gs{flex:1}.gsr{width:100%}
   .hero2{flex-direction:column;align-items:flex-start;padding:22px}.hero2 h1{font-size:32px}h1.t{font-size:28px}
 }
+
+/* ---------- skill tooltip ---------- */
+.sk-wrap{position:relative;display:inline-flex;align-items:center}
+.sk-tip{
+  display:none;position:absolute;z-index:60;
+  left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  width:280px;background:var(--bg2);border:1px solid var(--line2);
+  border-radius:12px;box-shadow:var(--shade);padding:12px 14px;
+  pointer-events:none;text-align:left;
+}
+.sk-wrap:hover .sk-tip,
+.sk-wrap:focus-within .sk-tip{display:block}
+/* flip para a esquerda quando não cabe à direita */
+@media(max-width:860px){.sk-tip{left:auto;right:calc(100% + 10px)}}
+.sk-tip .th{display:flex;gap:10px;align-items:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sk-tip .th img{width:36px;height:36px;flex:none}
+.sk-tip .th b{font-size:14px;display:block;line-height:1.3}
+.sk-tip .th small{color:var(--mut);font-size:12px}
+.sk-tip .req{color:var(--acc2);font-size:12.5px;font-weight:700;margin-bottom:6px}
+.sk-tip .desc{color:var(--tx2);font-size:12.5px;line-height:1.5;white-space:pre-line;max-height:160px;overflow:auto}
 </style>
 </head>
 <body>
@@ -190,7 +210,7 @@ input[type=range]{accent-color:var(--acc)}
   <nav id="nav">
     <button data-v="home">Início</button>
     <button data-v="builds">Builds</button>
-    <button data-v="dupla">Zeny + Up</button>
+    <button data-v="dupla">Guia de Zeny</button>
     <button data-v="regras">Regras do servidor</button>
     <button data-v="plan">Planejador</button>
     <button data-v="db">Banco de dados</button>
