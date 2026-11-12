@@ -52,9 +52,10 @@ node tools/prereq.js       # pré-requisitos de skill e pontos de Job
 node tools/stats_check.js  # atributos x tabela real de pontos do servidor
 node tools/validate.js     # itens/skills existem e selos de combate
 node tools/sobras.js       # pontos de atributo e de skill que sobram (meta: 0)
+node tools/ordem.js        # passo a passo: nenhuma skill antes do pré-requisito
 ```
 
-Todas as builds usam todos os pontos de skill de cada classe e terminam o nível 99 com 0 ou 1 ponto de atributo sobrando (1 só quando todo próximo ponto custa 2 ou mais).
+A 1ª classe é planejada até o **Job 50** (49 pontos): suba até o Job 50, gaste tudo na ordem da build e só então troque de classe. Todas as builds usam todos os pontos de skill de cada classe e terminam o nível 99 com 0 ou 1 ponto de atributo sobrando (1 só quando todo próximo ponto custa 2 ou mais).
 
 ## Atualizando os dados da wiki
 
@@ -81,6 +82,7 @@ As sprites já estão em `app/img/dp`. Para baixar de novo:
 | `validate.js` | Confere builds contra o banco (itens, skills, selos de combate) |
 | `prereq.js` | Confere pré-requisitos de skill e orçamento de pontos de Job |
 | `stats_check.js` | Confere as fases de atributos com a tabela real de pontos do servidor |
+| `ordem.js` | Confere se a ordem das skills (passo a passo do Job) respeita os pré-requisitos |
 | `sobras.js` | Mostra quantos pontos de atributo e de skill sobram em cada build |
 | `check_steps.js <build-id>` | Gera uma página de teste com o passo a passo de uma build |
 | `check_cal.js <restantes>` | Testa a calibração da fórmula de custo de atributos |

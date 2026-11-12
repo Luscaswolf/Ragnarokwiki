@@ -95,6 +95,7 @@
   up('alquimista-potter', 'AM_PHARMACY', 10, 'Fabricar poções: a renda da build (sem efeito em combate; confirme no jogo).');
 
   // ---------- Textos que mudaram junto ----------
+  Object.assign(B('cavaleiro-tyr').fases[2], { foco: 'Suba o Espadachim até o Job 50, gaste os 49 pontos (Impacto Explosivo 10 incluído) e só então vire Cavaleiro.', porque: 'Os Jobs 41–50 dão os 10 pontos que a build usa; a troca exige todos os pontos gastos.' });
   const fz = B('ferreiro-zeny');
   fz.fases[1].foco = 'Aumentar Capacidade 10 → Desconto 3 → Superfaturar 10 → Usar Carrinho 10 (no 10 o carrinho não reduz a velocidade) → Desconto 10. Mammonita só se sobrar zeny.';
   ['ferreiro-zeny', 'ferreiro-carrinho'].forEach(id => { const b = B(id); if (b.cuidados) b.cuidados = b.cuidados.map(t => t.replace(/não têm efeito em combate aqui: não gaste pontos\./, 'não têm efeito em combate aqui: recebem só os 7 pontos que sobram de Ferreiro depois de todas as skills úteis.')); });
@@ -138,4 +139,20 @@
     'alquimista-potter': [{ str: 1, agi: 1, vit: 5, int: 1, dex: 20, luk: 12 }, { str: 1, agi: 1, vit: 6, int: 1, dex: 52, luk: 48 }, { str: 1, agi: 1, vit: 6, int: 1, dex: 99, luk: 98 }],
   };
   for (const [id, fs] of Object.entries(ST)) fs.forEach((s, i) => { B(id).fases[i].stats = s; });
+
+  // ---------- Ordem do passo a passo: nenhuma skill antes do pré-requisito completo ----------
+  const DB = window.DB, CID = {}; DB.playable.forEach(p => CID[p.nome] = p.id);
+  for (const b of window.BUILDS) {
+    const cl = DB.classes[CID[b.classe]]; if (!cl) continue;
+    const n2c = {}, req = {};
+    for (const [sid, , pre] of cl.tree) { const s = DB.skills[sid]; if (s) { n2c[s.n] = s.code; req[s.code] = pre || ''; } }
+    const need = code => /Nenhum/.test(req[code] || 'Nenhum') ? [] : req[code].split(/,\s*/).map(x => x.match(/^(.*)\s(\d+)$/)).filter(Boolean).map(m => [n2c[m[1].trim()], +m[2]]).filter(x => x[0]);
+    const have = {}, out = [], pend = b.skills.slice();
+    while (pend.length) {
+      let i = pend.findIndex(([code]) => need(code).every(([rc, n]) => (have[rc] || 0) >= n));
+      if (i < 0) i = 0; // requisito fora da build: mantém a ordem original
+      const [r] = pend.splice(i, 1); out.push(r); have[r[0]] = (have[r[0]] || 0) + r[1];
+    }
+    b.skills = out;
+  }
 })();

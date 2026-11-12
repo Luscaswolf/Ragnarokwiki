@@ -179,9 +179,9 @@ function skillPlan(b) {
     const used = list.reduce((a, s) => a + s[1], 0);
     let msg = '';
     if (ti > 0 && ti < tiers.length - 1) {
-      msg = used <= 39 ? `<span class="ok">Usa ${used} pontos: dá para virar ${esc(pt(tiers[ti + 1]))} no Job 40.</span> Sobram ${39 - used} pontos para gastar antes da troca (a troca exige todos os pontos gastos).`
-        : used <= 49 ? `<span class="fora">Usa ${used} pontos: só troque de classe no Job ${used + 1}.</span> No Job 40 você teria 39 pontos e precisaria cortar ${used - 39}.`
-          : `<span class="nao">Usa ${used} pontos, mais que os 49 do Job 50. Corte ${used - 49}.</span>`;
+      msg = used === 49 ? `<span class="ok">Usa os 49 pontos do Job 50: suba até o Job 50, gaste tudo nesta ordem e só então vire ${esc(pt(tiers[ti + 1]))}.</span>`
+        : used < 49 ? `<span class="fora">Usa ${used} de 49 pontos: sobram ${49 - used}.</span>`
+          : `<span class="nao">Usa ${used} pontos, mais que os 49 do Job 50.</span>`;
     } else if (ti > 0) msg = used <= pts ? `<span class="ok">Usa ${used} de ${pts} pontos (Job ${max}).</span>${pts - used ? ` Sobram ${pts - used} pontos livres.` : ''}` : `<span class="nao">Usa ${used} pontos, mais que os ${pts} do Job ${max}.</span>`;
     h += `<div class="card" style="padding:4px 6px"><div style="padding:10px 10px 6px;display:flex;gap:10px;align-items:center">${img(P.clsIcon(c), 'style="height:30px"')}<b>${esc(pt(c))}</b><span class="mut">${ti === 0 ? 'Job 1–10' : 'Job 1–' + max}</span></div>${msg ? `<div style="padding:0 10px 8px;font-size:13px">${msg}</div>` : ''}`;
     h += `<div class="sk head"><span></span><span>Skill</span><span>Job</span><span class="sel">Selo no servidor</span><span class="why">Por quê</span></div>`;
