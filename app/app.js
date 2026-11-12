@@ -319,6 +319,26 @@ function _buildSecRota(b, rs, sec) {
   }
   return h;
 }
+function _buildSecFarmRota(b, sec) {
+  if (!b.farmRota || !b.farmRota.length) return '';
+  let h = sec('farm', 'Rota de farm de zeny: onde ir por nível');
+  h += '<div class="card" style="margin-bottom:12px"><p style="margin:0"><b>Regra deste servidor:</b> todo zeny vem de loot vendido ao NPC — sem drop direto de moeda e troca entre jogadores exige VIP. Loot/abate = soma de (preço NPC × chance de drop). Com Superfaturar 10 multiplique por 1,24.</p></div>';
+  h += '<div class="route">';
+  b.farmRota.forEach(s => {
+    const m = DB.maps[s.mapa], mp = P.map(s.mapa);
+    const nome = m ? m.n : s.mapa;
+    h += `<div class="st2" onclick="showMap('${s.mapa}')">`
+      + `<div class="mp" style="background-image:${mp.map(u => `url('${u}')`).join(',')}"><span class="lvb">nv ${s.de}–${s.ate}</span></div>`
+      + `<div class="bd">`
+      + `<b>${esc(nome)} <span class="mut" style="font-size:11px;font-weight:400">${s.lootAbate} z/abate</span></b>`
+      + `<small style="display:block;margin-top:3px"><b>Equip:</b> ${esc(s.equip)}</small>`
+      + `<small>${esc(s.porque)}</small>`
+      + `<div class="mobs">${(s.targets||[]).map(t => img(P.mon(t),`title="${esc(DB.mons[t]?DB.mons[t].n:'')}"`)).join('')}</div>`
+      + '</div></div>';
+  });
+  h += '</div>';
+  return h;
+}
 function _buildInfobox(b, last, main, others, secs) {
   return `<aside class="infobox"><div class="hero">${img(P.cls(b.classe))}</div><div class="ttl">${esc(pt(b.classe))}</div><dl>
     <dt>Caminho</dt><dd>${b.caminho.map(c => esc(pt(c))).join(' → ')}</dd>
@@ -327,7 +347,7 @@ function _buildInfobox(b, last, main, others, secs) {
     <dt>Atributos no nível 99</dt><dd>${ATR.filter(k => (last.stats[k] || 1) > 1).map(k => `<b style="color:var(--${k})">${k.toUpperCase()}</b> ${last.stats[k]}`).join(' · ')}</dd>
     ${DB.jobs[b.classe] && DB.jobs[b.classe].master ? `<dt>Mestre da classe</dt><dd>${esc(DB.jobs[b.classe].master.name.split('#')[0])} <span class="mut">(${esc(DB.jobs[b.classe].master.map)})</span></dd>` : ''}
     ${others.length ? `<dt>Outras builds de ${esc(pt(b.classe))}</dt><dd>${others.map(o => `<a onclick="go('${o.id}')">${esc(o.nome.split(' — ')[1])}</a>`).join('<br>')}</dd>` : ''}
-  </dl><div class="toc"><div class="mut" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Nesta página</div>${secs.map(([id, n]) => `<a href="#${id}">${n}</a>`).join('')}</div></aside>`;
+  </dl><div class="toc"><div class="mut" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Nesta página</div>${secs.map(([id, n]) => `<a onclick="var el=document.getElementById('${id}');el&&el.scrollIntoView({behavior:'smooth',block:'start'})" style="cursor:pointer">${n}</a>`).join('')}</div></aside>`;
 }
 function viewBuild() {
   const b = BUILDS.find(x => x.id === state.b) || BUILDS[0]; state.b = b.id;
@@ -335,7 +355,7 @@ function viewBuild() {
   const others = BUILDS.filter(x => x.classe === b.classe && x.id !== b.id);
   const rs = routesFor(b);
   const pares = (window.PARES || {})[b.id] || [];
-  const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados']].filter(Boolean);
+  const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], b.farmRota && b.farmRota.length && ['farm', 'Farm de zeny'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados']].filter(Boolean);
   const sec = (id, t) => `<h2 class="s" id="${id}">${t}</h2>`;
   let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › ${b.caminho.map(c => esc(pt(c))).join(' › ')}</div><div class="page"><div>`;
   h += `<h1 class="t">${esc(b.nome)} ${star(b)}</h1><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${b.tags.map(tag).join('')}</div><p class="lead">${esc(b.resumo)}</p>`;
@@ -350,6 +370,7 @@ function viewBuild() {
   }
   h += _buildSecEquip(b, sec);
   h += sec('cartas', 'Cartas') + `<p class="mut">Cartas só caem como drop lendário (raras). Monte a build para funcionar sem elas.</p><div class="items" style="padding:0">${b.cartas.map(([id, slot, why]) => itemCard(id, slot + (why ? ' — ' + why : ''))).join('')}</div>`;
+  h += _buildSecFarmRota(b, sec);
   if (rs.length) h += _buildSecRota(b, rs, sec);
   if (b.cuidados.length) h += sec('cuidados', 'Cuidados') + b.cuidados.map(c => `<div class="warn">${esc(c)}</div>`).join('');
   h += '</div>';
@@ -363,14 +384,51 @@ window.derived = (id, i) => {
   el.innerHTML = `<div class="card" style="margin-top:-4px"><b>Derivados no nível ${L}</b> <span class="mut">(sem equipamento e sem bônus de classe)</span><div class="kv" style="margin-top:8px">${Object.entries(d).map(([k, v]) => `<div><span>${k}</span>${v}</div>`).join('')}</div><p class="mut" style="margin:8px 0 0"><a onclick="toPlan('${id}',${i})">Abrir no Planejador →</a></p></div>`;
 };
 
-// ---------- DUPLA ----------
+// ---------- ZENY GUIDE ----------
 function viewDupla() {
-  let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › Zeny + Up</div><h1 class="t">${esc(DUPLA.titulo)}</h1><p class="lead">Um personagem de zeny secundário e outro para upar e farmar masmorra, escolhidos pelas regras deste servidor.</p><h2 class="s">Recomendação</h2><div class="duo">`;
-  for (const x of DUPLA.itens) { const b = BUILDS.find(y => y.id === x.build); h += `<div class="card" onclick="go('${x.build}')">${img(P.cls(b.classe))}<div><span class="chip">${esc(x.papel)}</span><div style="font-weight:700;margin:6px 0 2px">${esc(b.nome)}</div><div class="mut" style="font-size:13.5px">${esc(x.porque)}</div></div></div>`; }
-  h += '</div><h2 class="s">E o Alquimista "pure potter"?</h2><div class="callout"><div class="h">Vale como 3º personagem, com ressalvas</div>' + esc(DUPLA.nota) + ' <a onclick="go(\x27alquimista-potter\x27)">Abrir a build →</a></div>';
-  h += '<table><tr><th></th><th>Poção</th><th>NPC vende por</th><th>NPC compra de você</th><th>Erva (venda NPC)</th></tr>';
-  for (const [p, e] of [[504, 509], [503, 508], [502, null]]) { const it = DB.items[p], er = e && DB.items[e]; h += `<tr><td style="width:40px">${img(P.item(p))}</td><td>${esc(it.n)}</td><td>${fmt(it.buy)}z</td><td>${fmt(it.sell)}z</td><td>${er ? esc(er.n) + ' · ' + fmt(er.sell) + 'z' : '—'}</td></tr>`; }
-  h += '</table>';
+  const zBuilds = BUILDS.filter(b => b.tags && b.tags.includes('zeny'));
+  const spotMap = {};
+  zBuilds.filter(b => b.farmRota).forEach(b => {
+    b.farmRota.forEach(s => {
+      const key = s.mapa + '_' + s.de;
+      if (!spotMap[key]) spotMap[key] = { ...s, classes: [] };
+      const short = b.nome.split(' — ')[0].trim();
+      if (!spotMap[key].classes.includes(short)) spotMap[key].classes.push(short);
+    });
+  });
+  const spots = Object.values(spotMap).sort((a, b) => a.de - b.de);
+  let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › Guia de Zeny</div><h1 class="t">Como ganhar Zeny neste servidor</h1>`;
+  h += `<p class="lead">Todo zeny vem de loot vendido ao NPC — nenhum monstro dá moeda ao morrer e troca entre jogadores exige VIP. O que define sua renda é escolher o monstro certo para o seu nível.</p>`;
+  h += `<div class="callout"><div class="h">★ A regra fundamental</div>Loot/abate = soma de (preço de venda ao NPC × chance de drop) de todos os itens do monstro. Superfaturar (Ferreiro/Alquimista) aplica +24% sobre esse total sem nenhum esforço extra.</div>`;
+  h += `<h2 class="s">Os 3 pilares</h2><div class="duo">`;
+  h += `<div class="card"><b>💰 Monstro certo</b><div class="mut" style="margin-top:4px">Farm na faixa de nível com maior loot/abate. Trocar de mapa na hora certa dobra a renda.</div></div>`;
+  h += `<div class="card"><b>🛒 Carga máxima</b><div class="mut" style="margin-top:4px">Cada STR = +30 de peso. Carrinho do Mercador dá até 8.000 de carga extra.</div></div>`;
+  h += `<div class="card"><b>📈 Superfaturar</b><div class="mut" style="margin-top:4px">Superfaturar 10 (Ferreiro/Alquimista): +24% em tudo que você vende ao NPC. Aprenda uma vez, funciona para sempre.</div></div>`;
+  h += `</div>`;
+  h += `<h2 class="s">Builds de zeny disponíveis</h2><p class="mut">Clique para abrir a build completa com atributos, skills e rota de farm.</p><div class="duo">`;
+  zBuilds.forEach(b => {
+    h += `<div class="card" onclick="go('${b.id}')">${img(P.cls(b.classe))}<div><div style="font-weight:700;margin:2px 0 4px">${esc(b.nome)}</div><div class="mut" style="font-size:13px">${esc(b.resumo)}</div></div></div>`;
+  });
+  h += `</div>`;
+  h += `<h2 class="s">Progressão de spots por nível</h2><p class="mut">Loot/abate = venda NPC × chance, sem carta e sem Superfaturar. Com Superfaturar 10 multiplique por 1,24.</p>`;
+  h += `<div class="route">`;
+  spots.forEach(s => {
+    const m = DB.maps[s.mapa], mp = P.map(s.mapa);
+    h += `<div class="st2" onclick="showMap('${s.mapa}')">`
+      + `<div class="mp" style="background-image:${mp.map(u => `url('${u}')`).join(',')}"><span class="lvb">nv ${s.de}–${s.ate}</span></div>`
+      + `<div class="bd"><b>${esc(m?m.n:s.mapa)} <span class="mut" style="font-size:11px;font-weight:400">${s.lootAbate} z/abate</span></b>`
+      + `<small style="display:block;margin-top:2px"><b>Classes:</b> ${esc(s.classes.join(', '))}</small>`
+      + `<small>${esc(s.porque)}</small>`
+      + `<div class="mobs">${(s.targets||[]).map(t=>img(P.mon(t),`title="${esc(DB.mons[t]?DB.mons[t].n:'')}"`)).join('')}</div>`
+      + `</div></div>`;
+  });
+  h += `</div>`;
+  h += `<h2 class="s">Dicas práticas</h2><div class="card"><ul class="why">`;
+  h += `<li><b>Configure a reposição automática de HP</b> antes de sair: sem isso o personagem morre no idle e perde horas de farm.</li>`;
+  h += `<li><b>Troque de mapa assim que atingir o nível mínimo</b> do próximo spot — o loot/abate mais que dobra a cada troca.</li>`;
+  h += `<li><b>Volte ao NPC antes de encher o peso</b>: regeneração para a 70%, skills param a 90%.</li>`;
+  h += `<li><b>Sem VIP não tente fabricar e vender pociões</b>: o NPC já vende Pocião Branca por 600z. Você não consegue competir sem loja de jogador.</li>`;
+  h += `</ul></div>`;
   $('#view').innerHTML = h;
 }
 // ---------- REGRAS ----------

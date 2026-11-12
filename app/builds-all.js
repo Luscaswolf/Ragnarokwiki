@@ -305,6 +305,76 @@ window.BUILDS = [
   ],
   cartas: [[4092, 'Arma', ''], [4126, 'Arma', ''], [4233, 'Armadura', 'Leopardo Filhote: SOR +3 e armadura indestrutível (Mercador).'], [4133, 'Capa', '']],
   cuidados: ['Forjas, Encontrar Minério, Ganância e Consertar Armas não têm efeito em combate aqui: não gaste pontos.', 'Quase todas as skills de Mercador (exceto Mammonita, Cavalo-de-Pau, Grito de Guerra) têm selo "Sem efeito em combate". Superfaturar é passiva de venda: confirme no balcão.'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Arma da 2ª classe. Superfaturar 10 ativo (Ferreiro/Alquimista).",
+      "porque": "Les: Folha Afiada (20%, 403z). Seguro e fácil. Bom para farm idle logo ao virar 2ª classe enquanto abre skills."
+    },
+    {
+      "mapa": "alde_dun02",
+      "de": 60,
+      "ate": 69,
+      "targets": [
+        1213
+      ],
+      "lootAbate": 179,
+      "equip": "Machado de Duas Mãos [1] (110.000z). Adrenalina Pura 5 ativo.",
+      "porque": "Grand Orc: Amuleto dos Orcs (75%, 71z) + Dente de Ogro (25%, 329z). Com Superfaturar 10 tudo rende +24% no NPC."
+    },
+    {
+      "mapa": "c_tower2",
+      "de": 70,
+      "ate": 79,
+      "targets": [
+        1269
+      ],
+      "lootAbate": 171,
+      "equip": "Machado de Duas Mãos [1] com encantamento de Fogo.",
+      "porque": "Relógio: Ponteiro (53%, 273z). Use encantamento de Fogo para matar mais rápido."
+    },
+    {
+      "mapa": "tur_dun02",
+      "de": 80,
+      "ate": 89,
+      "targets": [
+        1316,
+        1319
+      ],
+      "lootAbate": 609,
+      "equip": "Machado de Duas Mãos [1] ou Machado Impetuoso. STR 80+ para carga.",
+      "porque": "Congelador + Solidificador: Casco de Tartaruga (44%, 340z) + Geléia Real (1,8%, 3500z) + Cubo de Gelo (12,5%, 330z). Um dos melhores loots do servidor."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Machado Impetuoso ou Machado Gigante.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Casco de Tartaruga (35%, 340z) + Pérola (2,5%, 3000z). Melhor loot absoluto do servidor."
+    }
+  ],
 },
 {
   id: 'alquimista-acido', classe: 'Alchemist', nome: 'Alquimista — Terror Ácido (STR/DEX/INT)', tags: ['up', 'zeny'],
@@ -325,6 +395,64 @@ window.BUILDS = [
   equip: [{ fase: 'Final de loja', itens: [1360, 2314, 2228, 2505, 2627], porque: '' }],
   cartas: [[4092, 'Arma', ''], [4233, 'Armadura', '']],
   cuidados: ['Não espere lucro de Preparar Poção: sem efeito em combate e sem mercado (veja Regras).'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "cmd_fild01",
+      "de": 50,
+      "ate": 59,
+      "targets": [
+        1099
+      ],
+      "lootAbate": 167,
+      "equip": "Machado de Duas Mãos [1]. Terror Ácido 5 ativo.",
+      "porque": "Argiope: Terror Ácido ignora DEF e não gasta frasco aqui. Superfaturar 10 desde Mercador: todo loot rende +24% no NPC."
+    },
+    {
+      "mapa": "alde_dun02",
+      "de": 60,
+      "ate": 72,
+      "targets": [
+        1213
+      ],
+      "lootAbate": 179,
+      "equip": "Machado de Duas Mãos [1]. Homúnculo ajuda a tankar.",
+      "porque": "Grand Orc: Amuleto dos Orcs (75%, 71z) + Dente de Ogro (25%, 329z). Terror Ácido ignora DEF."
+    },
+    {
+      "mapa": "ein_fild06",
+      "de": 73,
+      "ate": 89,
+      "targets": [
+        1201
+      ],
+      "lootAbate": 159,
+      "equip": "Machado de Duas Mãos [1]. INT 45+ para SP do Terror Ácido.",
+      "porque": "Rybio: Terror Ácido neutro, não perde dano por elemento. Risco menor que Medusa nessa faixa."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Equipamento final. VIT 55 para aguentar.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Casco de Tartaruga (35%, 340z) + Pérola (2,5%, 3000z). Melhor loot absoluto do servidor."
+    }
+  ],
 },
 // ============================== GATUNO ==============================
 {
@@ -370,6 +498,78 @@ window.BUILDS = [
   equip: [{ fase: 'Gatuno', itens: [1216, 2224, 2501, 2403], porque: '' }, { fase: 'Arruaceiro', itens: [1222, 1219, 2335, 2226, 2505, 2627], porque: 'Damascus [1] (98.000z) ou Gladius [2].' }],
   cartas: [[4092, 'Arma', ''], [4426, 'Armadura', 'Byorgue: +10% ATQ para Arruaceiro.'], [4133, 'Capa', '']],
   cuidados: ['Túnel de Fuga, Graffiti, Faxina, Malandragem e Extorquir não têm efeito em combate.'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Arma da 2ª classe. Superfaturar 10 ativo (Ferreiro/Alquimista).",
+      "porque": "Les: Folha Afiada (20%, 403z). Mãos Leves já ativas: cada abate pode dar drop extra automático sem custo."
+    },
+    {
+      "mapa": "ein_dun01",
+      "de": 60,
+      "ate": 69,
+      "targets": [
+        1621,
+        1616
+      ],
+      "lootAbate": 443,
+      "equip": "Damascus [1] (98.000z). Mãos Leves 10 ativo.",
+      "porque": "Nuvem Venenosa: Bactérias (30%, 512z) + Poeira Poluente (50%, 128z) + Gás Tóxico (20%, 333z). Mãos Leves pode soltar duas Bactérias por abate."
+    },
+    {
+      "mapa": "cmd_fild03",
+      "de": 70,
+      "ate": 79,
+      "targets": [
+        1391,
+        1317
+      ],
+      "lootAbate": 452,
+      "equip": "Damascus [1]. DEX 60+ para acertar.",
+      "porque": "Pingu: Cyfar (53%, 386z) + Folha de Yggdrasil (1%, 2000z). Foca: Zargônio (44%, 240z). Drop duplo via Mãos Leves."
+    },
+    {
+      "mapa": "tur_dun02",
+      "de": 80,
+      "ate": 94,
+      "targets": [
+        1316,
+        1319
+      ],
+      "lootAbate": 609,
+      "equip": "Damascus [1]. DEX 60+.",
+      "porque": "Congelador + Solidificador: Casco de Tartaruga (44%, 340z) + Geléia Real (1,8%, 3500z). Mãos Leves + Afanar: loot + drop extra + zeny roubado por abate."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 95,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Damascus [1] ou melhor. LUK 20+ para Afanar bem.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Pérola (2,5%, 3000z). Dois Cabelos Horrendo por abate com Mãos Leves."
+    }
+  ],
 },
 // ============================== CLASSES EXPANDIDAS ==============================
 {
@@ -465,6 +665,54 @@ window.BUILDS.push(
   equip: [{ fase: 'Provisório', itens: [1154, 2307, 2405, 2226], porque: 'Espada Bastarda [2].' }, { fase: 'Final de loja', itens: [1157, 2314, 2228, 2505, 2627], porque: '' }],
   cartas: [[4092, 'Arma', ''], [4126, 'Arma', ''], [4285, 'Capa', 'Choco: esquiva.'], [4097, 'Armadura', '']],
   cuidados: ['Menos dano em área que a versão Impacto de Tyr: melhor em mapas com monstros espalhados.'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Arma da 2ª classe. Superfaturar 10 ativo (Ferreiro/Alquimista).",
+      "porque": "Les: Folha Afiada (20%, 403z). Seguro e fácil. Bom para farm idle logo ao virar 2ª classe enquanto abre skills."
+    },
+    {
+      "mapa": "tur_dun02",
+      "de": 70,
+      "ate": 89,
+      "targets": [
+        1316,
+        1319
+      ],
+      "lootAbate": 609,
+      "equip": "Espada/lança boa. AGI 80+ para esquiva. Poção Branca na reposição.",
+      "porque": "Cavaleiro AGI aguenta a Tartaruga cedo por causa da esquiva alta. Casco de Tartaruga (44%, 340z) + Geléia Real (1,8%, 3500z)."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Equipamento final. Poção Branca na reposição automática.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Casco de Tartaruga (35%, 340z) + Pérola (2,5%, 3000z). Melhor loot absoluto do servidor."
+    }
+  ],
 },
 {
   id: 'cavaleiro-lanca', classe: 'Knight', nome: 'Cavaleiro — Lança e Perfurar (contra grandes)', tags: ['up', 'masmorra'],
@@ -570,6 +818,66 @@ window.BUILDS.push(
   skills: [['NV_BASIC', 9, ''], ['TF_DOUBLE', 10, ''], ['TF_MISS', 10, ''], ['TF_POISON', 10, ''], ['AS_KATAR', 10, ''], ['AS_ENCHANTPOISON', 10, ''], ['AS_SONICACCEL', 1, '']],
   equip: [{ fase: 'Assassino', itens: [1250, 1254, 2335, 2226, 2505, 2627], porque: 'Jamadhar.' }],
   cartas: [[4086, 'Arma', 'Esqueleto Soldado: crítico +9.'], [4297, 'Arma', 'Soldadinho de Chumbo: +10% dano crítico.'], [4091, 'Arma', 'Cobold: crítico +4.'], [4006, 'Acessório', 'Lunático.']], cuidados: [],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Arma da 2ª classe. Superfaturar 10 ativo (Ferreiro/Alquimista).",
+      "porque": "Les: Folha Afiada (20%, 403z). Seguro e fácil. Bom para farm idle logo ao virar 2ª classe enquanto abre skills."
+    },
+    {
+      "mapa": "cmd_fild03",
+      "de": 70,
+      "ate": 79,
+      "targets": [
+        1391,
+        1317
+      ],
+      "lootAbate": 452,
+      "equip": "Katar com encantamento. CRIT 30+ para crítico constante.",
+      "porque": "Pingu: Cyfar (53%, 386z). Foca: Zargônio (44%, 240z). Crítico ignora DEF — mata rápido sem depender de DEX."
+    },
+    {
+      "mapa": "tur_dun02",
+      "de": 80,
+      "ate": 89,
+      "targets": [
+        1316,
+        1319
+      ],
+      "lootAbate": 609,
+      "equip": "Equipamento de meio-game completo. Poção Branca na reposição automática.",
+      "porque": "Congelador + Solidificador: Casco de Tartaruga (44%, 340z) + Geléia Real (1,8%, 3500z) + Cubo de Gelo (12,5%, 330z). Um dos melhores loots do servidor."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Equipamento final. Poção Branca na reposição automática.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Casco de Tartaruga (35%, 340z) + Pérola (2,5%, 3000z). Melhor loot absoluto do servidor."
+    }
+  ],
 },
 {
   id: 'arruaceiro-arco', classe: 'Rogue', nome: 'Arruaceiro — Arco (Rajada + Furto)', tags: ['zeny', 'up'],
@@ -580,6 +888,66 @@ window.BUILDS.push(
   fases: [{ nv: '50–99 (Arruaceiro)', stats: { str: 20, agi: 70, vit: 30, int: 1, dex: 95, luk: 20 }, foco: 'Rajada de Flechas 10, Olhos de Águia 10, Afanar.', porque: '' }],
   skills: [['NV_BASIC', 9, ''], ['TF_DOUBLE', 5, ''], ['TF_STEAL', 10, ''], ['TF_MISS', 5, ''], ['AC_VULTURE', 10, ''], ['AC_DOUBLE', 10, ''], ['RG_SNATCHER', 4, ''], ['RG_STEALCOIN', 10, '']],
   equip: [{ fase: 'Final de loja', itens: [1714, 1752, 2335, 2226, 2505], porque: '' }], cartas: [[4092, 'Arma', '']], cuidados: ['Mãos Leves só dispara em ataque corpo a corpo: a versão de arco depende do Afanar.'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Arma da 2ª classe. Superfaturar 10 ativo (Ferreiro/Alquimista).",
+      "porque": "Les: Folha Afiada (20%, 403z). Seguro e fácil. Bom para farm idle logo ao virar 2ª classe enquanto abre skills."
+    },
+    {
+      "mapa": "ein_dun01",
+      "de": 60,
+      "ate": 69,
+      "targets": [
+        1621,
+        1616
+      ],
+      "lootAbate": 443,
+      "equip": "Arco médio. DEX 60+. Mãos Leves ativo.",
+      "porque": "Nuvem Venenosa: Bactérias (30%, 512z). Ataque à distância mantém o Arruaceiro seguro. Mãos Leves dispara Furto automático."
+    },
+    {
+      "mapa": "tur_dun02",
+      "de": 80,
+      "ate": 89,
+      "targets": [
+        1316,
+        1319
+      ],
+      "lootAbate": 609,
+      "equip": "Equipamento de meio-game completo. Poção Branca na reposição automática.",
+      "porque": "Congelador + Solidificador: Casco de Tartaruga (44%, 340z) + Geléia Real (1,8%, 3500z) + Cubo de Gelo (12,5%, 330z). Um dos melhores loots do servidor."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Equipamento final. Poção Branca na reposição automática.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Casco de Tartaruga (35%, 340z) + Pérola (2,5%, 3000z). Melhor loot absoluto do servidor."
+    }
+  ],
 },
 // ---------------- NOVIÇO ----------------
 {
@@ -602,6 +970,76 @@ window.BUILDS.push(
   fases: [{ nv: '50–99 (Ferreiro)', stats: { str: 90, agi: 30, vit: 55, int: 20, dex: 55, luk: 1 }, foco: 'Usar Carrinho, Cavalo-de-Pau, Superfaturar, Força Violenta.', porque: 'INT 20 para o SP do Cavalo-de-Pau.' }],
   skills: [['NV_BASIC', 9, ''], ['MC_INCCARRY', 5, 'Requisito.'], ['MC_DISCOUNT', 3, 'Requisito.'], ['MC_OVERCHARGE', 10, ''], ['MC_PUSHCART', 10, 'Velocidade normal com carrinho.'], ['MC_CARTREVOLUTION', 1, 'A skill da build.'], ['MC_LOUD', 1, ''], ['BS_WEAPONRESEARCH', 5, ''], ['BS_HILTBINDING', 1, ''], ['BS_SKINTEMPER', 1, ''], ['BS_HAMMERFALL', 1, ''], ['BS_ADRENALINE', 5, ''], ['BS_OVERTHRUST', 5, '']],
   equip: [{ fase: 'Final de loja', itens: [1360, 2314, 2228, 2505, 2627], porque: '' }], cartas: [[4092, 'Arma', '']], cuidados: ['Confirme no jogo que o carrinho é alugado (Usar Carrinho aparece "sem efeito em combate", mas a página de Carrinho da wiki diz que o aluguel existe).'],
+  farmRota: [
+    {
+      "mapa": "ayo_fild02",
+      "de": 41,
+      "ate": 49,
+      "targets": [
+        1494,
+        1586
+      ],
+      "lootAbate": 424,
+      "equip": "Qualquer arma de loja. Nível mínimo recomendado: 41.",
+      "porque": "Leaf Cat: Folha de Figo (53%, 269z) + Folha Gigante (44%, 305z). Beetle King: Pata de Besouro (45%, 145z). Melhor mapa de farm antes de virar 2ª classe."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 59,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Arma da 2ª classe. Superfaturar 10 ativo (Ferreiro/Alquimista).",
+      "porque": "Les: Folha Afiada (20%, 403z). Seguro e fácil. Bom para farm idle logo ao virar 2ª classe enquanto abre skills."
+    },
+    {
+      "mapa": "alde_dun02",
+      "de": 60,
+      "ate": 69,
+      "targets": [
+        1213
+      ],
+      "lootAbate": 179,
+      "equip": "Machado de Duas Mãos [1]. Carrinho no nível 10.",
+      "porque": "Grand Orc: Amuleto dos Orcs (75%, 71z) + Dente de Ogro (25%, 329z). Cavalo-de-Pau acerta área — vários Grand Orcs por vez."
+    },
+    {
+      "mapa": "c_tower2",
+      "de": 70,
+      "ate": 79,
+      "targets": [
+        1269
+      ],
+      "lootAbate": 171,
+      "equip": "Machado de Duas Mãos [1] + encantamento de Fogo.",
+      "porque": "Relógio: Ponteiro (53%, 273z). Cavalo-de-Pau em área é ideal num mapa cheio de Relógios agrupados."
+    },
+    {
+      "mapa": "tur_dun02",
+      "de": 80,
+      "ate": 89,
+      "targets": [
+        1316,
+        1319
+      ],
+      "lootAbate": 609,
+      "equip": "Equipamento de meio-game completo. Poção Branca na reposição automática.",
+      "porque": "Congelador + Solidificador: Casco de Tartaruga (44%, 340z) + Geléia Real (1,8%, 3500z) + Cubo de Gelo (12,5%, 330z). Um dos melhores loots do servidor."
+    },
+    {
+      "mapa": "beach_dun",
+      "de": 90,
+      "ate": 99,
+      "targets": [
+        1148
+      ],
+      "lootAbate": 413,
+      "equip": "Equipamento final. Poção Branca na reposição automática.",
+      "porque": "Medusa: Cabelo Horrendo (53%, 400z) + Casco de Tartaruga (35%, 340z) + Pérola (2,5%, 3000z). Melhor loot absoluto do servidor."
+    }
+  ],
 },
 // ---------------- EXPANDIDAS ----------------
 {
