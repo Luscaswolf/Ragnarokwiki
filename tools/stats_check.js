@@ -1,6 +1,6 @@
 // node tools/stats_check.js -> confere as fases de atributos com a tabela REAL do servidor (pontosPorNivel)
 const fs=require('fs'),vm=require('vm');const c={window:{}};vm.createContext(c);
-for(const f of ['app/db.js','app/calc.js','app/builds.js','app/builds2.js','app/builds3.js','app/builds4.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c);
+for(const f of ['app/db.js','app/calc.js','app/builds.js','app/builds2.js','app/builds3.js','app/builds4.js','app/builds5.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c);
 const W=c.window,CALC=W.CALC,K=['str','agi','vit','int','dex','luk'];
 const dump=JSON.parse(fs.readFileSync('data/ro-wiki-dump.json','utf8'));
 const tab=dump.WIKI_GAME.tools.curves.find(x=>x.classe==='Novice').pontosPorNivel;

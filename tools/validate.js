@@ -1,6 +1,6 @@
 // node tools/validate.js  -> confere builds.js contra db.js
 const fs=require('fs'),vm=require('vm');const ctx={window:{}};vm.createContext(ctx);
-for(const f of ['app/db.js','app/builds.js','app/builds2.js','app/builds3.js','app/builds4.js','app/calc.js'])vm.runInContext(fs.readFileSync(f,'utf8'),ctx);
+for(const f of ['app/db.js','app/builds.js','app/builds2.js','app/builds3.js','app/builds4.js','app/builds5.js','app/calc.js'])vm.runInContext(fs.readFileSync(f,'utf8'),ctx);
 const {DB,BUILDS,CALC}=ctx.window;const code2={};for(const[id,s]of Object.entries(DB.skills))code2[s.code]=s;
 let probs=0;const p=m=>{probs++;console.log('  !',m)};
 for(const b of BUILDS){console.log(b.id);

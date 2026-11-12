@@ -26,7 +26,8 @@ app/
                       simulação da distribuição de pontos, chance de Preparar Poção
   db.js               banco compacto gerado a partir do dump da wiki (não editar à mão)
   builds.js           regras do servidor (REGRAS) + builds (BUILDS)
-  builds2..4.js       mais builds (BUILDS.push) e complementos
+  builds2..4.js       mais builds (BUILDS.push) e correções
+  builds5.js          distribuição final: todos os pontos de skill e atributo usados
   img/dp/             sprites (card, item, job, map, mob, skill) da Divine Pride
 data/
   ro-wiki-dump.json   banco completo baixado da wiki (fonte do db.js)
@@ -50,7 +51,10 @@ Depois de editar, rode as verificações (precisa de Node.js):
 node tools/prereq.js       # pré-requisitos de skill e pontos de Job
 node tools/stats_check.js  # atributos x tabela real de pontos do servidor
 node tools/validate.js     # itens/skills existem e selos de combate
+node tools/sobras.js       # pontos de atributo e de skill que sobram (meta: 0)
 ```
+
+Todas as builds usam todos os pontos de skill de cada classe e terminam o nível 99 com 0 ou 1 ponto de atributo sobrando (1 só quando todo próximo ponto custa 2 ou mais).
 
 ## Atualizando os dados da wiki
 
@@ -77,6 +81,7 @@ As sprites já estão em `app/img/dp`. Para baixar de novo:
 | `validate.js` | Confere builds contra o banco (itens, skills, selos de combate) |
 | `prereq.js` | Confere pré-requisitos de skill e orçamento de pontos de Job |
 | `stats_check.js` | Confere as fases de atributos com a tabela real de pontos do servidor |
+| `sobras.js` | Mostra quantos pontos de atributo e de skill sobram em cada build |
 | `check_steps.js <build-id>` | Gera uma página de teste com o passo a passo de uma build |
 | `check_cal.js <restantes>` | Testa a calibração da fórmula de custo de atributos |
 | `check_me.js` | Testa "continuar a partir dos meus atributos" |

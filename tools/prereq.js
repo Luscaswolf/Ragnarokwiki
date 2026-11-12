@@ -1,6 +1,6 @@
 // node tools/prereq.js -> confere pré-requisitos e orçamento de pontos de cada build
 const fs=require('fs'),vm=require('vm');const c={window:{}};vm.createContext(c);
-for(const f of ['app/db.js','app/calc.js','app/builds.js','app/builds2.js','app/builds3.js','app/builds4.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c);
+for(const f of ['app/db.js','app/calc.js','app/builds.js','app/builds2.js','app/builds3.js','app/builds4.js','app/builds5.js'])vm.runInContext(fs.readFileSync(f,'utf8'),c);
 const W=c.window,D=W.DB,CID={};D.playable.forEach(p=>CID[p.nome]=p.id);
 const S={};for(const[id,s]of Object.entries(D.skills))S[s.code]={...s,id:+id};
 let bad=0;
