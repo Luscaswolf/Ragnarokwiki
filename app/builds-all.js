@@ -1139,10 +1139,13 @@ window.SERVIDOR = {
   'bruxo-aoe': 'A conjuração do jogador não é interrompida neste servidor, o maior ponto fraco do Bruxo no clássico. Nevasca e Meteoros funcionam e as rotas da wiki usam mapas cheios (Strouf, Congelador, Rybio).',
   'sabio-bolt': 'Desejo Arcano (auto-magia) tem selo "Sem efeito em combate", o que mata o Sábio batedor clássico. Sobra a versão conjuradora, que funciona e tem Conjuração Livre.',
   'cacador-dex': 'É a build mais segura para idle: ataca de longe, flecha elemental custa 6z na loja e Ataque Aéreo dispara sozinho. A rota da wiki cobre do 50 ao 99.',
-  'bardo-suporte': 'As 19 skills do Bardo funcionam em combate aqui. Grupo dá +10% EXP por membro, e as músicas aceleram o grupo inteiro.',
-  'odalisca-suporte': 'Todas as danças funcionam em combate. Mesma lógica do Bardo, para personagem feminino.',
+  'bardo-suporte': 'As 19 skills do Bardo funcionam em combate aqui. Grupo dá +10% EXP por membro, e as músicas aceleram o grupo inteiro. As músicas do Bardo funcionam em combate aqui e afetam todos os aliados no alcance. Grupo dá +10% de EXP por membro: com Bardo tocando, o grupo upar mais rápido e morre menos. Sincronize deixando o Bardo no mesmo mapa que o principal.',
+
+  'odalisca-suporte': 'Todas as danças funcionam em combate. Mesma lógica do Bardo, para personagem feminino. As danças da Odalisca funcionam em combate aqui e afetam todos os aliados no alcance. Grupo dá +10% de EXP por membro: use com o personagem principal no mesmo mapa para o bônus funcionar no idle.',
+
   'sacerdote-suporte': 'Grupo dá +10% de EXP por membro e divide EXP até 15 níveis de diferença. Kyrie, Magnificat e Glória funcionam. Teleporte e Portal não têm efeito, então não gaste pontos neles.',
-  'sacerdote-tu': 'Anubis (rota final da wiki) e Glast Heim são cheios de mortos-vivos. Esconjurar mata na hora com chance, e a wiki recomenda testar a partir do 73.',
+  'sacerdote-tu': 'Anubis (rota final da wiki) e Glast Heim são cheios de mortos-vivos. Esconjurar mata na hora com chance, e a wiki recomenda testar a partir do 73. Esconjurar e Magnus Exorcismus atingem vários mortos-vivos de uma vez. Grupo dá +10% de EXP por membro: o Sacerdote de combate pode ser o personagem principal da dupla enquanto o secundário foca em zeny.',
+
   'monge-combo': 'Combo Triplo dispara sozinho nos ataques normais: ideal para idle. Impacto Psíquico funciona e é forte contra os alvos de defesa alta da rota (Sleeper).',
   'ferreiro-zeny': 'Todo zeny do servidor vem de vender loot, e Superfaturar é a única skill que aumenta esse valor. O Ferreiro tem o melhor dano automático da linha Mercador e STR alta para carregar o loot.',
   'alquimista-acido': 'A wiki confirma: Terror Ácido não consome frasco neste servidor. Ganha Superfaturar do Mercador. A fabricação de poção não compensa (ver aba Zeny + Up).',
@@ -1199,7 +1202,43 @@ window.BUILDS.push({
     { fase: 'Para lutar um pouco', itens: [1301, 2103, 2307, 2405, 2226], porque: '' },
   ],
   cartas: [[4001, 'Acessório', 'Poring: SOR +2.'], [4004, 'Acessório', 'Drops: DES +1.'], [4064, 'Acessório', 'Zerom: DES +3.'], [4233, 'Armadura', 'Leopardo Filhote: SOR +3.']],
-  cuidados: ['Se ESTE personagem for o que farma offline, não faça o Pure: DEX/LUK não matam os monstros nível 43–58 que dropam Erva Branca. Faça o Alquimista de batalha (Terror Ácido + Homunculus) com Preparar Poção 10: ≈79% de sucesso, mas farma a própria erva.', 'Poção Compacta: o Tubo de Ensaio não tem fonte nos dados do servidor (nem loja, nem drop). Não compre o Manual Vol.8 (240.000z) antes de achar onde conseguir tubos no jogo.', 'Teste antes de investir: compre 1 Manual Vol.1 (100.000z) e 10 Vasilhas e tente fabricar. A evidência (missão do Conversor) é boa, mas não é confirmação.', 'A fabricação é uma ação sua, não do modo offline: você precisa entrar no jogo para fabricar os lotes.', 'Poção Vermelha dá prejuízo: a erva vende 9z e a poção 7z. Só fabrique Branca e Amarela.', 'Poção Azul não compensa: o NPC vende por 50z.', 'Sem VIP, não troque o Ferreiro de zeny pelo Potter: o Superfaturar do Ferreiro vale para TODO o loot, o Potter só multiplica a erva.'],
+  cuidados: ['Se ESTE personagem for o que farma offline, não faça o Pure: DEX/LUK não matam os monstros nível 43–58 que dropam Erva Branca. Faça o Alquimista de batalha (Terror Ácido + Homunculus) com Preparar Poção 10: ≈79% de sucesso, mas farma a própria erva.', 'Poção Compacta: o Tubo de Ensaio não tem fonte nos dados do servidor (nem loja, nem drop). Não compre o Manual Vol.8 (240.000z) antes de achar onde conseguir tubos no jogo.', 'Teste antes de investir: compre 1 Manual Vol.1 (100.000z) e 10 Vasilhas e tente fabricar. A evidência (missão do Conversor) é boa, mas não é confirmação.', 'A fabricação é uma ação sua, não do modo offline: você precisa entrar no jogo para fabricar os lotes.', 'Poção Vermelha dá prejuízo: a erva vende 9z e a poção 7z. Só fabrique Branca e Amarela.', 'Poção Azul não compensa: o NPC vende por 50z.', 'Sem VIP, não troque o Ferreiro de zeny pelo Potter: o Superfaturar do Ferreiro vale para TODO o loot, o Potter só multiplica a erva.'],
+  farmRota: [
+    {
+      "mapa": "pay_fild01",
+      "de": 16,
+      "ate": 30,
+      "targets": [
+        1014,
+        1031
+      ],
+      "lootAbate": 0,
+      "equip": "Sem arma ofensiva. DEX e LUK altos para melhorar a chance de sucesso.",
+      "porque": "Esporo e Poporing dropam Erva Branca (20% e 15%), ingrediente principal da Poção Branca. Farm de Erva Branca aumenta a margem: cada erva custa 0z de loot e rende ~372z em poção vendida ao NPC."
+    },
+    {
+      "mapa": "pay_fild02",
+      "de": 31,
+      "ate": 49,
+      "targets": [
+        1013
+      ],
+      "lootAbate": 0,
+      "equip": "DEX 70+, LUK 48+.",
+      "porque": "Wolf dropa Erva Branca com boa frequência. Monstro resistente: deixe seu personagem principal tankando enquanto o Potter coleta Erva Branca no mesmo mapa."
+    },
+    {
+      "mapa": "mosk_dun01",
+      "de": 49,
+      "ate": 99,
+      "targets": [
+        1881
+      ],
+      "lootAbate": 98,
+      "equip": "Focar em fabricar poções. Superfaturar 10 ativo.",
+      "porque": "Les dropa Folha Afiada (20%) e Erva Verde (11%). Com Superfaturar 10, cada poção fabricada vende ao NPC por 372z em vez de 300z. Com VIP dos dois lados dá para vender a 600z para jogadores e comprar Erva Branca de outros."
+    }
+  ],
 });
 // O up offline muda a conta do Potter: atualiza os textos gerais
 window.REGRAS.splice(1, 0, { t: 'O up é offline; só masmorra exige jogar', d: 'O personagem continua caçando enquanto você está fora (informação de quem joga; a wiki só cita que "na Praça não dá para dormir"). Por isso personagem fraco em combate custa só tempo offline, e ter 2–4 personagens é natural: 4 vagas grátis por conta.' });
@@ -1481,8 +1520,29 @@ window.REGRAS.splice(2, 0, { t: 'Custo dos atributos: a partir do 10 já custa 3
     'justiceiro-pistola': [{ str: 1, agi: 40, vit: 20, int: 15, dex: 70, luk: 10 }, { str: 1, agi: 71, vit: 40, int: 30, dex: 99, luk: 21 }],
     'alquimista-potter': [{ str: 1, agi: 1, vit: 5, int: 1, dex: 20, luk: 12 }, { str: 1, agi: 1, vit: 6, int: 1, dex: 52, luk: 48 }, { str: 1, agi: 1, vit: 6, int: 1, dex: 99, luk: 98 }],
   };
-  for (const [id, fs] of Object.entries(ST)) fs.forEach((s, i) => { B(id).fases[i].stats = s; });
+  for (const [id, fs] of Object.entries(ST)) {
+    const b = B(id); if (!b) continue;
+    fs.forEach((s, i) => {
+      // se a fase não existe ainda, cria a partir da última
+      if (!b.fases[i]) {
+        const prev = b.fases[b.fases.length - 1];
+        b.fases.push({ nv: prev.nv, stats: { ...prev.stats }, foco: prev.foco, porque: prev.porque });
+      }
+      b.fases[i].stats = s;
+    });
+  }
 
+
+  // Corrige nv/foco das fases criadas pelo ST
+  const FN = {"superaprendiz": ["1–30", "31–70", "71–99"], "justiceiro-rifle": ["1–39", "40–99"], "ninja-magico": ["1–39", "40–99"], "taekwon-chutes": ["1–30", "31–99"], "templario-lanca": ["11–49 (Espadachim)", "50–99 (Templário)"], "sabio-suporte": ["11–49 (Mago)", "50–99 (Sábio)"], "cacador-falcao": ["11–49 (Arqueiro)", "50–99 (Caçador)"], "arruaceiro-arco": ["11–49 (Gatuno)", "50–99 (Arruaceiro)"], "sacerdote-batalha": ["11–49 (Acólito)", "50–99 (Sacerdote)"], "ferreiro-carrinho": ["11–49 (Mercador)", "50–99 (Ferreiro)"], "superaprendiz-mago": ["1–30", "31–99"], "ninja-arremesso": ["1–39", "40–99"], "justiceiro-pistola": ["1–39", "40–99"]};
+  const FF = {"superaprendiz": ["Habilidades Básicas 9, Ataque Duplo 5, Perícia em Esquiva 5.", "Ataque Duplo 10, Golpe Fulminante 10, Aumentar Recuperação de HP 10.", "Perícia em Esquiva 10, habilidades de suporte."], "justiceiro-rifle": ["Habilidades Básicas 9, Olhos de Serpente 10, Rastrear o Alvo 5.", "Rastrear o Alvo 10, Ataque Concentrado, Reação em Cadeia 10."], "ninja-magico": ["Habilidades Básicas 9, Perícia Ninja 10, Pétalas Flamejantes 5.", "Pétalas Flamejantes 10, Lâmina de Vento 10, Lança Congelante 10."], "taekwon-chutes": ["Habilidades Básicas 9, Corrida 10, postura inicial.", "Posturas avançadas, Chute Aéreo, Chute Duplo, Tornado."], "templario-lanca": ["Golpe Fulminante para matar, Escudo (pré-requisito de Templário).", "Perícia com Lança 10, Rapidez com Lança 10, Fé, Bloqueio."], "sabio-suporte": ["Fogo Bola 10 para upar, Encantar de Fogo 1 (abre a árvore do Sábio).", "Os 4 Encantar, Vulcão/Dilúvio/Furacão, Proteger Terreno, Desencantar."], "cacador-falcao": ["Rajada de Flechas 10, Concentração de Olhos 10.", "Garras de Aço 10, Ataque Aéreo 5. Treine o Falcão assim que virar Caçador."], "arruaceiro-arco": ["Furto 10, Ataque Duplo 5. Pegue Rajada de Flechas do Arqueiro na árvore do Arruaceiro.", "Rajada de Flechas 10, Olhos de Águia 10, Afanar, Mãos Leves."], "sacerdote-batalha": ["Aumentar Agilidade, Bênção, Golpe Fulminante. Foco em STR/AGI.", "Perícia com Maça 10, Impositio, Glória, Escudo Sagrado."], "ferreiro-carrinho": ["Superfaturar 10, Usar Carrinho 10. Depois Cavalo-de-Pau 5 (requisito).", "Cavalo-de-Pau 10, Força Violenta, Manejo Perfeito, Amplificar Poder."], "superaprendiz-mago": ["Habilidades Básicas 9, Lança Fria 5, Lança de Vento 5.", "Lanças 10, Aumentar Recuperação de SP 10."], "ninja-arremesso": ["Habilidades Básicas 9, Perícia com Shuriken 10, Arremessar Shuriken 5.", "Arremessar Kunai 5, Arremessar Huuma 5, Perícia Ninja 10."], "justiceiro-pistola": ["Habilidades Básicas 9, Reação em Cadeia 10, Olhos de Serpente 10.", "Desperado 10, Rajada Certeira 5, Dispersar."]};
+  const FP = {"superaprendiz": ["STR e AGI primeiro. Não tem 2ª classe: use a Praça de EXP todo dia (250%, 30 min).", "Nível de classe vai até 70: não desperdice pontos de skill além disso.", "DEX 52 para acertar monstros de fim de jogo."], "justiceiro-rifle": ["DEX é o dano de arma de fogo. Nível de classe vai até 70, não tem 2ª classe.", "DEX 99 máximo. AGI para velocidade. LUK 30 para Cara ou Coroa."], "ninja-magico": ["INT e DEX primeiro: são o dano e a velocidade de cast. Nível de classe vai até 70.", "INT 99 máximo. DEX 78 para cast rápido."], "taekwon-chutes": ["AGI para velocidade de ataque e esquiva. Nível de classe vai até 70.", "STR 75 e AGI 88 para máximo dano e velocidade."], "templario-lanca": ["AGI alta para esquiva: o Templário AGI vai manter esse estilo na 2ª classe.", "STR 80 para dano. AGI 80 para esquiva e velocidade."], "sabio-suporte": ["INT e DEX primeiro. VIT 20 mínimo para não morrer fácil no idle.", "VIT 60 para aguentar. INT 90 para duração dos Encantar. DEX para cast rápido."], "cacador-falcao": ["DEX é o dano. LUK aumenta a chance de crítico do Falcão; comece a subir cedo.", "DEX máximo para dano. INT 50 para o HP do Falcão. LUK 50 para crítico do Falcão."], "arruaceiro-arco": ["DEX e AGI primeiro. Furto 10 = 62% de chance base, já rende loot extra no 1º job.", "DEX máximo para dano de arco. AGI para velocidade."], "sacerdote-batalha": ["O Sacerdote Batalha usa STR e AGI, não INT. Distribua diferente dos builds de suporte.", "STR 80 para dano. AGI 75 para velocidade. INT 20 para SP."], "ferreiro-carrinho": ["Superfaturar cedo: todo loot vendido daqui em diante rende +24%. Carrinho 10 não reduz velocidade.", "STR 90 para dano e carga. INT 20 para SP do Cavalo-de-Pau."], "superaprendiz-mago": ["INT e DEX primeiro. VIT 20 mínimo para não morrer fácil.", "INT 99 máximo. VIT 40 para aguentar no idle. DEX 80 para cast rápido."], "ninja-arremesso": ["DEX é o dano de arremesso. Nível de classe vai até 70.", "DEX máximo para dano. STR para Huuma Shuriken. AGI para velocidade de ataque."], "justiceiro-pistola": ["DEX e AGI primeiro. Projétil custa 2z na loja.", "DEX 99 máximo. AGI para velocidade. INT 30 para SP do Desperado."]};
+  for (const id of Object.keys(FN)) {
+    const b = B(id); if (!b) continue;
+    FN[id].forEach((nv, i) => {
+      if (b.fases[i]) { b.fases[i].nv = nv; b.fases[i].foco = (FF[id]||[])[i] || b.fases[i].foco; b.fases[i].porque = (FP[id]||[])[i] || ''; }
+    });
+  }
   // ---------- Ordem do passo a passo: nenhuma skill antes do pré-requisito completo ----------
   const DB = window.DB, CID = {}; DB.playable.forEach(p => CID[p.nome] = p.id);
   for (const b of window.BUILDS) {

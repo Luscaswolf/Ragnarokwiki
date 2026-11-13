@@ -384,7 +384,7 @@ function viewBuild() {
   const others = BUILDS.filter(x => x.classe === b.classe && x.id !== b.id);
   const rs = routesFor(b);
   const pares = (window.PARES || {})[b.id] || [];
-  const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], b.farmRota && b.farmRota.length && ['farm', 'Farm de zeny'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados']].filter(Boolean);
+  const secs = [['por-que', 'Por que essa build'], b.extra === 'potter' && ['potter', 'Vale a pena fabricar?'], ['atributos', 'Atributos: como distribuir'], ['skills', 'Skills: ordem por Job'], pares.length && ['pares', 'Combina com (principal/secundário)'], ['equip', 'Equipamento'], ['cartas', 'Cartas'], b.farmRota && b.farmRota.length && ['farm', 'Farm de zeny'], rs.length && ['rota', 'Rota de up'], b.cuidados.length && ['cuidados', 'Cuidados'], ['idle', 'Como configurar o idle']].filter(Boolean);
   const sec = (id, t) => `<h2 class="s" id="${id}">${t}</h2>`;
   let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › ${b.caminho.map(c => esc(pt(c))).join(' › ')}</div><div class="page"><div>`;
   h += `<h1 class="t">${esc(b.nome)} ${star(b)}</h1><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${b.tags.map(tag).join('')}</div><p class="lead">${esc(b.resumo)}</p>`;
@@ -402,6 +402,15 @@ function viewBuild() {
   h += _buildSecFarmRota(b, sec);
   if (rs.length) h += _buildSecRota(b, rs, sec);
   if (b.cuidados.length) h += sec('cuidados', 'Cuidados') + b.cuidados.map(c => `<div class="warn">${esc(c)}</div>`).join('');
+  // Seção idle config — fixa em todas as builds
+  h += sec('idle', 'Como configurar o idle');
+  h += '<div class="card"><ul class="why">';
+  h += '<li><b>Reposição automática de HP</b> — abra a janela de consumíveis e defina o limiar de HP (recomendado: 70%). O personagem usa a poção automaticamente quando cair abaixo.</li>';
+  h += '<li><b>Reposição automática de SP</b> — configure Poção Azul se a build usar skills com SP constante (Bruxo, Alquimista, Sacerdote).</li>';
+  h += '<li><b>Retorno ao NPC pelo peso</b> — cada STR = +30 de carga. A regeneração para a 70% de peso e as skills param a 90%. Configure o retorno automático antes de encher.</li>';
+  h += '<li><b>Praça de EXP</b> — disponível 30 min por dia com bônus de 250% de EXP. Use sempre que possível para acelerar a progressão. Personagem de zeny também se beneficia.</li>';
+  h += '<li><b>Alvo automático</b> — o jogo ataca o monstro mais próximo no automático. Certifique-se de que o mapa tem a densidade certa para o nível: se morrer com frequência, recue para o mapa anterior.</li>';
+  h += '</ul></div>';
   h += '</div>';
   h += _buildInfobox(b, last, main, others, secs) + '</div>';
   $('#view').innerHTML = h;
@@ -594,6 +603,58 @@ window.showSkill = c => { const s = SK[c]; if (!s) return; openM(img(P.skill(c))
 
 function render() {
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v === state.v));
-  side(); ({ home: viewHome, builds: viewBuild, dupla: viewDupla, regras: viewRegras, plan: viewPlan, db: viewDB }[state.v] || viewHome)(); save();
+  
+// ---------- COMO COMEÇAR ----------
+function viewInicio() {
+  let h = `<div class="crumbs"><a onclick="nav('home')">Início</a> › Como começar</div><h1 class="t">Como começar no RO Classic Idle</h1>`;
+  h += `<p class="lead">Guia para jogadores novos: por onde entrar, qual build fazer primeiro, quanto custa e qual é a ordem.</p>`;
+
+  h += `<div class="callout"><div class="h">★ Regra mais importante</div>O jogo é 100% automático — você configura o personagem e ele luta sozinho. Zeny vem de loot vendido ao NPC, não de drop direto. Escolha sempre o monstro certo para o seu nível.</div>`;
+
+  h += `<h2 class="s">Passo 1 — Faça o personagem principal</h2>`;
+  h += `<p class="mut">O principal é quem vai upar masmorras e gerar EXP. Recomendados para iniciantes:</p><div class="duo">`;
+  const recs = ['cacador-dex', 'cavaleiro-tyr', 'bruxo-aoe'];
+  recs.forEach(id => {
+    const b = BUILDS.find(x => x.id === id);
+    if (!b) return;
+    h += `<div class="card" onclick="go('${id}')">${img(P.cls(b.classe))}<div><div style="font-weight:700;margin:2px 0 4px">${esc(b.nome)}</div><div class="mut" style="font-size:13px">${esc(b.resumo)}</div></div></div>`;
+  });
+  h += `</div>`;
+
+  h += `<h2 class="s">Passo 2 — Faça o personagem de zeny</h2>`;
+  h += `<p class="mut">O secundário fica farmando loot enquanto o principal upar. Recomendado:</p><div class="duo">`;
+  const zenyrec = ['ferreiro-zeny', 'arruaceiro-farm'];
+  zenyrec.forEach(id => {
+    const b = BUILDS.find(x => x.id === id);
+    if (!b) return;
+    h += `<div class="card" onclick="go('${id}')">${img(P.cls(b.classe))}<div><div style="font-weight:700;margin:2px 0 4px">${esc(b.nome)}</div><div class="mut" style="font-size:13px">${esc(b.resumo)}</div></div></div>`;
+  });
+  h += `</div>`;
+
+  h += `<h2 class="s">Passo 3 — Configure o idle</h2>`;
+  h += `<div class="card"><ul class="why">`;
+  h += `<li><b>Reposição automática de HP</b> — abra Consumíveis e defina o limiar em 70%. Sem isso o personagem morre e fica parado.</li>`;
+  h += `<li><b>Praça de EXP</b> — use os 30 min de bônus de 250% todo dia nos dois personagens. É o maior multiplicador de progressão gratuito.</li>`;
+  h += `<li><b>Troque de mapa ao nível certo</b> — cada build tem uma seção "Farm de zeny" ou "Rota de up" com exatamente quando ir para cada mapa.</li>`;
+  h += `<li><b>Retorno pelo peso</b> — configure o retorno automático ao NPC antes de encher a mochila. A regeneração para a 70% de peso.</li>`;
+  h += `</ul></div>`;
+
+  h += `<h2 class="s">Quanto custa começar?</h2>`;
+  h += `<div class="card"><ul class="why">`;
+  h += `<li><b>Personagem principal</b> — Caçador DEX: flecha de 6z na loja, sem custo fixo. Cavaleiro: espada de loja ~5.000z. Bruxo: só poções azuis.</li>`;
+  h += `<li><b>Personagem de zeny (Ferreiro)</b> — Machado de loja: ~1.000z no Aprendiz → ~110.000z no Ferreiro 50+. Priorize Superfaturar 10 antes de qualquer outra skill.</li>`;
+  h += `<li><b>Resetar atributos custa caro</b> (1kk zeny). Planeje antes de distribuir pontos — cada build tem um planejador de atributos.</li>`;
+  h += `</ul></div>`;
+
+  h += `<h2 class="s">Links úteis</h2>`;
+  h += `<div class="duo">`;
+  h += `<div class="card" onclick="nav('dupla')" style="cursor:pointer"><b>Guia de Zeny</b><div class="mut" style="font-size:13px;margin-top:4px">Progressão completa de spots por nível, com loot/abate calculado.</div></div>`;
+  h += `<div class="card" onclick="nav('regras')" style="cursor:pointer"><b>Regras do servidor</b><div class="mut" style="font-size:13px;margin-top:4px">O que muda em relação ao RO clássico e quais builds foram descartadas.</div></div>`;
+  h += `</div>`;
+
+  $('#view').innerHTML = h;
+}
+
+side(); ({ home: viewHome, builds: viewBuild, dupla: viewDupla, regras: viewRegras, plan: viewPlan, db: viewDB, inicio: viewInicio }[state.v] || viewHome)(); save();
 }
 render();
